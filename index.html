@@ -1,0 +1,64 @@
+<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DRIVE IQ</title><style>
+html,body{margin:0;height:100%;background:#020617;color:#fff;font-family:Arial,sans-serif;overflow:hidden}
+#wrap{display:none;height:100%;gap:2vw;padding:2vw;box-sizing:border-box}
+.t{flex:1;background:#0f172a;border-radius:3vw;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.l{color:#94a3b8;font-size:2.4vw;font-weight:bold;letter-spacing:.1vw}#offer .l{color:rgba(255,255,255,.9)}#offer .s{color:rgba(255,255,255,.85)}
+.v{font-size:9vw;font-weight:900;line-height:1.05}.s{color:#cbd5e1;font-size:2.2vw}
+#offer{display:none;flex:2.2;border-radius:3vw;flex-direction:column;align-items:center;justify-content:center;transition:background .3s}
+#offer .v{font-size:15vw}#offer .row{display:flex;gap:3vw;font-size:3.6vw;font-weight:bold;margin-top:1vw}
+.gold{background:linear-gradient(135deg,#a16207,#eab308 50%,#a16207)}.green{background:#15803d}.red{background:#b91c1c}.orange{background:#c2410c}
+#err{position:fixed;bottom:1vw;left:0;right:0;text-align:center;color:#64748b;font-size:1.6vw}
+#pair{display:none;height:100%;flex-direction:column;align-items:center;justify-content:center;gap:2vw;text-align:center;padding:0 4vw}
+#pair h1{font-size:5vw;margin:0}#pair p{color:#94a3b8;font-size:2.4vw;margin:0}
+#pair input{font-size:5vw;width:60vw;text-align:center;padding:1vw;border-radius:1.5vw;border:3px solid #334155;background:#0f172a;color:#5eead4;letter-spacing:.4vw}
+#pair button{font-size:3.4vw;padding:1.2vw 5vw;border-radius:1.5vw;border:0;background:#e82127;color:#fff;font-weight:bold}
+#chg{position:fixed;top:.6vw;right:1vw;color:#334155;font-size:1.5vw;background:none;border:0}
+</style></head><body>
+<div id="pair"><h1>DRIVE IQ · ecran mașină</h1><p>Scrie codul din telefon: DRIVE IQ → 🚘 Tesla → „Prin internet”</p>
+<input id="code" placeholder="xxxx-xxxx-xxxx" autocomplete="off" autocapitalize="off" spellcheck="false"><button id="go">Conectează</button><p id="perr"></p></div>
+<div id="wrap">
+<div id="offer"><div class="l" id="op">OFERTĂ</div><div class="v" id="okm">–</div><div class="s">lei / km</div><div class="row"><span id="oh"></span><span id="od"></span><span id="of"></span></div></div>
+<div class="t"><div class="l">AZI</div><div class="v" id="a">–</div><div class="s" id="n"></div></div>
+<div class="t" id="tph"><div class="l">LEI / ORĂ</div><div class="v" id="ph">–</div><div class="s" id="w"></div></div>
+<div class="t" id="tg"><div class="l">OBIECTIV</div><div class="v" id="g">–</div><div class="s">din ziua de azi</div></div>
+</div><div id="err">DRIVE IQ · aștept telefonul…</div><button id="chg" style="display:none">schimbă codul</button>
+<script>
+var $=function(i){return document.getElementById(i)},enc=new TextEncoder(),RELAY='https://ntfy.sh/';
+var code=null,key=null,topic=null,es=null,cur=null,curRecv=0,lastId=null,lastMsgAt=0;
+function norm(s){return(s||'').toLowerCase().replace(/[^a-z0-9]/g,'').replace(/^(.{4})(.{4})(.{4}).*$/,'$1-$2-$3')}
+function sha(s){return crypto.subtle.digest('SHA-256',enc.encode(s))}
+function hex(b){return Array.prototype.map.call(new Uint8Array(b),function(x){return('0'+x.toString(16)).slice(-2)}).join('')}
+function save(k,v){try{v==null?localStorage.removeItem(k):localStorage.setItem(k,v)}catch(e){}}
+function load(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function showPair(msg){$("chg").style.display="none";$('wrap').style.display='none';$('pair').style.display='flex';$('perr').textContent=msg||'';$('err').style.display='none'}
+async function start(c){
+ c=norm(c);if(!/^[a-z2-9]{4}-[a-z2-9]{4}-[a-z2-9]{4}$/.test(c)){showPair(c?'Codul are 12 caractere (ex. ab3k-x9pm-q2ze)':'');return}
+ if(!window.crypto||!crypto.subtle){showPair('Browserul nu suportă criptarea (pagina trebuie deschisă cu https://)');return}
+ code=c;save('diq',c);topic='diq'+hex(await sha('t:'+c)).slice(0,20);
+ key=await crypto.subtle.importKey('raw',await sha('k:'+c),{name:'AES-GCM'},false,['decrypt']);
+ $('pair').style.display='none';$('wrap').style.display='flex';$("chg").style.display="block";$('err').style.display='block';
+ if(location.hash)history.replaceState(null,'',location.pathname);
+ await poll();listen();
+}
+async function dec(b64){var raw=Uint8Array.from(atob(b64.trim()),function(ch){return ch.charCodeAt(0)});
+ var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:raw.slice(0,12)},key,raw.slice(12));return JSON.parse(new TextDecoder().decode(pt))}
+async function take(m,live){if(!m||m.event!=='message'||m.id===lastId)return;
+ try{var d=await dec(m.message);lastId=m.id;var at=live?Date.now():m.time*1000;if(at<lastMsgAt)return;lastMsgAt=at;cur=d;curRecv=at;draw()}catch(e){$('err').textContent='DRIVE IQ · mesaj necitibil – verifică codul (schimbă codul, sus în dreapta)'}}
+async function poll(){try{var r=await fetch(RELAY+topic+'/json?poll=1&since=12h',{cache:'no-store'});var tx=await r.text();
+ var ls=tx.trim().split('\n').filter(Boolean);if(ls.length)await take(JSON.parse(ls[ls.length-1]),false);else if(!cur)$('err').textContent='DRIVE IQ · conectat la releu · aștept prima ofertă / cursă din telefon'}catch(e){}}
+function listen(){if(es)es.close();es=new EventSource(RELAY+topic+'/sse');es.onmessage=function(ev){try{take(JSON.parse(ev.data),true)}catch(e){}};
+ es.onerror=function(){$('err').textContent='DRIVE IQ · fără internet în mașină – reîncerc…'}}
+function ago(ms){var m=Math.round(ms/60000);return m<1?'acum':m<60?'acum '+m+' min':'acum '+Math.floor(m/60)+' h'}
+function draw(){if(!cur)return;var d=cur,t=d.t,now=Date.now();
+ $('a').textContent=t.a;$('n').textContent=t.n+' curse';$('ph').textContent=t.ph;$('w').textContent=t.w+' lucrate';$('g').textContent=t.g<0?'–':t.g+'%';
+ var o=d.o,box=$('offer'),age=(d.oa||0)+(now-curRecv);
+ if(o&&age<45000){box.style.display='flex';box.className=o.k;$('op').textContent=o.p.toUpperCase()+(o.pay=='CASH'?' · 💵 CASH':'');$('okm').textContent=o.km;
+  $('oh').textContent=o.h?o.h+' lei/oră':'';$('od').textContent=o.d+' km';$('of').textContent=o.f+' lei';$('tph').style.display='none';$('tg').style.display='none'}
+ else{box.style.display='none';$('tph').style.display='flex';$('tg').style.display='flex'}
+ $('err').textContent='DRIVE IQ · prin internet, criptat · actualizat '+ago(now-curRecv)}
+$('go').onclick=function(){start($('code').value)};$('code').onkeydown=function(e){if(e.key==='Enter')start($('code').value)};
+$('chg').onclick=function(){save('diq',null);if(es)es.close();code=null;cur=null;showPair('')};
+setInterval(draw,1000);setInterval(function(){if(topic)poll()},30000);
+start(decodeURIComponent(location.hash.slice(1))||load('diq')||'');
+</script></body></html>
