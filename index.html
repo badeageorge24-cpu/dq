@@ -1,5 +1,5 @@
 <!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DRIVE IQ</title><style>
+<title>DRIVE IQ</title><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script><style>
 html,body{margin:0;height:100%;background:#020617;color:#fff;font-family:Arial,sans-serif;overflow:hidden}
 #wrap{display:none;height:100%;gap:2vw;padding:2vw;box-sizing:border-box}
 .t{flex:1;background:#0f172a;border-radius:3vw;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -13,16 +13,143 @@ html,body{margin:0;height:100%;background:#020617;color:#fff;font-family:Arial,s
 #pair h1{font-size:5vw;margin:0}#pair p{color:#94a3b8;font-size:2.4vw;margin:0}
 #pair input{font-size:5vw;width:60vw;text-align:center;padding:1vw;border-radius:1.5vw;border:3px solid #334155;background:#0f172a;color:#5eead4;letter-spacing:.4vw}
 #pair button{font-size:3.4vw;padding:1.2vw 5vw;border-radius:1.5vw;border:0;background:#e82127;color:#fff;font-weight:bold}
+#mapbox{display:none;flex:2;border-radius:3vw;overflow:hidden;position:relative;background:#0f172a}#map{position:absolute;inset:0}.leaflet-container{background:#1e293b!important}#minfo{white-space:nowrap;position:absolute;left:1vw;bottom:1vw;z-index:500;background:rgba(2,6,23,.8);border-radius:1vw;padding:.5vw 1vw;font-size:1.8vw;font-weight:bold}
+#offer .row span{white-space:nowrap}.withmap #offer .v{font-size:11vw}.withmap #offer .row{font-size:2.5vw;gap:2vw}.withmap #offer{flex:1.8}
+#ridebox{display:none;flex:1;border-radius:3vw;background:#020617;flex-direction:column;align-items:center;justify-content:center;text-align:center}#rclk{font-size:20vw;font-weight:900;line-height:1}#rdat{color:#94a3b8;font-size:3vw;margin-top:1vw}#rmsg{font-size:6vw;font-weight:bold;padding:0 4vw}
+#wrap{flex-wrap:wrap;align-content:stretch}.t{flex:1 1 26%;min-height:30%}
+#full{display:none;position:fixed;inset:0;z-index:900;background:#000;align-items:center;justify-content:center}#full video{width:100%;height:100%;object-fit:contain;display:none}
+#logo{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#logo .big{font-size:13vw;font-weight:900;letter-spacing:.5vw;background:linear-gradient(90deg,#22d3ee,#a78bfa,#f472b6,#22d3ee);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 6s linear infinite}
+#logo .bolt{font-size:9vw;animation:pu 1.6s ease-in-out infinite}#logo .tag{color:#94a3b8;font-size:2.6vw;margin-top:1vw}
+@keyframes sh{to{background-position:300% 0}}@keyframes pu{50%{transform:scale(1.15);filter:drop-shadow(0 0 2vw #facc15)}}
+#bclip{position:fixed;left:1vw;bottom:.6vw;z-index:950;background:none;border:0;color:#334155;font-size:2vw}
+body.th-neon .t{background:#05051a;border:.25vw solid #22d3ee;box-shadow:0 0 2vw rgba(34,211,238,.35)}body.th-neon .t .v{color:#67e8f9;text-shadow:0 0 1.5vw rgba(103,232,249,.7)}body.th-neon .t .l{color:#f0abfc}
+body.th-hc,body.th-hc #ridebox{background:#000}body.th-hc .t{background:#000;border:.2vw solid #fff}body.th-hc .l,body.th-hc .s{color:#fff}
+body.th-light{background:#e2e8f0;color:#0f172a}body.th-light .t{background:#fff}body.th-light .l{color:#475569}body.th-light .s{color:#334155}body.th-light #ridebox{background:#e2e8f0}
+body.big .t .v{font-size:12vw}body.big .t .l{font-size:3.1vw}body.big .t .s{font-size:2.8vw}
+#wrap.many .t{flex-basis:21%}#wrap.many .t .v{font-size:6.3vw}#wrap.many .t .l{font-size:1.9vw}#wrap.many .t .s{font-size:1.7vw}body.big #wrap.many .t .v{font-size:7.5vw}
+#oaddr{display:none;margin-top:1.6vw;width:92%;text-align:left}#oaddr div{font-size:2.9vw;font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:.3vw 0}
+.withmap #oaddr div{font-size:2.1vw}
+#bonbar{display:none;position:fixed;left:50%;transform:translateX(-50%);bottom:3vw;z-index:960;background:#16a34a;color:#fff;border:.4vw solid #bbf7d0;border-radius:5vw;padding:1.6vw 4vw;font-size:3.6vw;font-weight:900;box-shadow:0 0 3vw rgba(22,163,74,.6);white-space:nowrap}
+#bonbar.confirm{background:#ca8a04;border-color:#fde68a}#bonbar.sent{background:#334155;border-color:#94a3b8}#bonbar.ok{background:#15803d}#bonbar.bad{background:#b91c1c;border-color:#fecaca}
+#cashbox{display:none;position:fixed;inset:0;z-index:940;background:radial-gradient(ellipse at 50% 30%,#14532d,#020617 75%);flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#cashbox .ct{font-size:3.4vw;font-weight:900;letter-spacing:.4vw;color:#bbf7d0}#cashamt{font-size:14vw;font-weight:900;line-height:1.05}#cashsub{font-size:2.8vw;color:#d1fae5;margin:.5vw 0 10vw}
+#cashbox.done{background:radial-gradient(ellipse at 50% 30%,#166534,#020617 75%)}#cashamt{white-space:nowrap}#cashbox.done .ct{display:none}#cashbox.done #cashamt{font-size:10vw}
+body.cash #bonbar{font-size:4.4vw;padding:2vw 6vw;bottom:4vw}
 #chg{position:fixed;top:.6vw;right:1vw;color:#334155;font-size:1.5vw;background:none;border:0}
+
+/* ---- T1–T25 ---- */
+.money{transition:filter .3s}body.hidem .money{filter:blur(2.2vw)}
+#offer.semfull{position:fixed;inset:0;z-index:930;border-radius:0}#offer.semfull .v{font-size:min(26vw,40vh)}#offer.semfull .l{font-size:min(3.4vw,6vh)}#offer.semfull .row{font-size:min(4.5vw,8vh)}#offer.semfull #oaddr{width:80%;margin-top:1vh}#offer.semfull #oaddr div{font-size:min(3.2vw,6vh)}#offer.semfull #cd{height:2.2vh}
+#cd{display:none;width:80%;height:1.4vw;background:rgba(0,0,0,.3);border-radius:1vw;margin-top:1.4vw;overflow:hidden}#cd i{display:block;height:100%;width:100%;background:#fff;border-radius:1vw;transition:width 1s linear}#cd.low i{background:#fde047}
+#gring{display:none;width:15vw;height:15vw}#gring circle{fill:none;stroke-width:11}#gring .bg{stroke:rgba(148,163,184,.25)}#gring .fg{stroke:#22c55e;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset 1s}
+#gring text{fill:#fff;font-weight:900;font-size:26px;text-anchor:middle;dominant-baseline:middle}body.th-light #gring text{fill:#0f172a}
+#wrap.lots .t{flex-basis:17%}#wrap.lots .t .v{font-size:5vw}#wrap.lots .t .l{font-size:1.6vw}#wrap.lots .t .s{font-size:1.5vw}#wrap.lots #gring{width:10vw;height:10vw}
+.t{overflow:hidden;min-height:0}.t .v{font-size:min(9vw,16vh)}.t .l{font-size:min(2.4vw,4.4vh)}.t .s{font-size:min(2.2vw,4vh)}#wrap.many .t .v{font-size:min(6.3vw,12vh)}#wrap.many .t .l{font-size:min(1.9vw,3.6vh)}#wrap.many .t .s{font-size:min(1.7vw,3.3vh)}#wrap.lots .t .v{font-size:min(5vw,10vh)}#wrap.lots .t .l{font-size:min(1.6vw,3.2vh)}#wrap.lots .t .s{font-size:min(1.45vw,3vh);padding:0 .6vw}
+.t .list{font-size:min(2vw,3.8vh);line-height:1.4;text-align:left;width:88%}#wrap.lots .t .list{font-size:min(1.5vw,3vh)}#wrap.lots #l5 .ag{display:none}.t .list b{font-weight:900}
+.bar2{height:.8vw;background:rgba(148,163,184,.25);border-radius:1vw;overflow:hidden;margin:.2vw 0 .5vw}.bar2 i{display:block;height:100%;background:#38bdf8}
+#tomap{flex:1 1 40%;position:relative;overflow:hidden;padding:0}#omap{position:absolute;inset:0}#ominfo{position:absolute;left:1vw;bottom:1vw;z-index:500;background:rgba(2,6,23,.8);border-radius:1vw;padding:.4vw 1vw;font-size:1.7vw;white-space:nowrap}
+#waitbar{display:none;position:fixed;top:5vw;left:50%;transform:translateX(-50%);z-index:958;background:#1e293b;border:.35vw solid #f59e0b;border-radius:4vw;padding:1vw 3vw;font-size:3.2vw;font-weight:900;white-space:nowrap}#waitbar small{font-size:2.2vw;font-weight:bold;color:#fcd34d}#waitbar.paid{border-color:#22c55e}#waitbar.cx{border-color:#ef4444}
+.ov{display:none;position:fixed;inset:0;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+#pausebox{z-index:935;background:radial-gradient(ellipse at 50% 30%,#3b2a12,#020617 75%)}#pausebox .big{font-size:16vw;font-weight:900;line-height:1}#pausebox .l1{font-size:4vw;font-weight:900;color:#fcd34d;letter-spacing:.3vw}#pausebox .l2{font-size:3vw;color:#e2e8f0;margin-top:1vw}
+#chgbox{z-index:936;background:radial-gradient(ellipse at 50% 30%,#0c3b4a,#020617 75%)}#chgbox .big{font-size:13vw;font-weight:900;line-height:1}#chgbox .l1{font-size:3.6vw;font-weight:900;color:#67e8f9;letter-spacing:.3vw}#chgbox .row3{display:flex;gap:3vw;margin-top:2.5vw}#chgbox .row3 div{background:rgba(15,23,42,.7);border-radius:2vw;padding:1.2vw 2.6vw;font-size:2.2vw;color:#94a3b8}#chgbox .row3 b{display:block;font-size:5vw;color:#fff}#chgbox .x{margin-top:2.5vw;color:#64748b;font-size:1.9vw}
+#hello{z-index:980;background:radial-gradient(ellipse at 50% 35%,#1e1b4b,#020617 75%)}#hello .h1{font-size:7vw;font-weight:900}#hello .h2{font-size:3vw;color:#c7d2fe;margin-top:1.5vw}#hello .h3{font-size:3.4vw;margin-top:2vw}
+#qrbox{z-index:985;background:#fff;color:#0f172a}#qrbox #qr{width:30vw;height:30vw}#qrbox #qr svg,#qrbox #qr img{width:100%;height:100%}#qrbox .q1{font-size:4vw;font-weight:900;margin-bottom:1.5vw}#qrbox .q2{font-size:2.2vw;color:#475569;margin-top:1.4vw}
+#confetti{display:none;position:fixed;inset:0;z-index:975;pointer-events:none}#conftxt{display:none;position:fixed;left:0;right:0;top:38%;z-index:976;text-align:center;font-size:7vw;font-weight:900;text-shadow:0 .5vw 2vw rgba(0,0,0,.7);pointer-events:none}
+#ticker{display:none;position:fixed;left:0;right:0;bottom:0;height:4vw;z-index:920;background:rgba(2,6,23,.92);border-top:.2vw solid #1e293b;overflow:hidden;white-space:nowrap}#ticker span{display:inline-block;padding-left:100%;font-size:2.2vw;line-height:4vw;color:#e2e8f0;animation:tk 40s linear infinite}@keyframes tk{to{transform:translateX(-100%)}}
+body.tk #wrap{padding-bottom:5vw}body.tk #err{bottom:4.4vw}body.tk #bclip{bottom:4.6vw}
+#phs{display:none;position:fixed;left:1vw;top:.6vw;z-index:955;color:#475569;font-size:1.5vw}
+body.rb #wrap{padding-top:4.6vw}#rbar{display:none;position:fixed;top:.4vw;right:.6vw;z-index:957;gap:.6vw}#rbar button{background:rgba(15,23,42,.75);border:.15vw solid #334155;color:#cbd5e1;border-radius:1.2vw;font-size:2.2vw;padding:.4vw 1vw;min-width:4.6vw}#rbar button.on{border-color:#38bdf8;color:#fff}#rbar button.warn{background:#ca8a04;color:#fff;border-color:#fde68a;font-size:1.8vw}
+#chg{top:auto;bottom:.6vw}
+#laybar{display:none;position:fixed;left:50%;bottom:2vw;transform:translateX(-50%);z-index:961;gap:1vw;background:#0f172a;border:.2vw solid #38bdf8;border-radius:2vw;padding:1vw}#laybar button{font-size:3vw;padding:.6vw 2.4vw;border-radius:1.2vw;border:0;background:#1e293b;color:#fff;font-weight:900}#laybar span{white-space:nowrap;color:#94a3b8;font-size:1.8vw;align-self:center;padding:0 1vw}
+body.lay .t,body.lay #tomap{outline:.3vw dashed #334155}.t.sel{outline:.5vw solid #38bdf8!important}.t.wide,#tomap.wide{flex-basis:55%!important}
+#slide{display:none;width:100%;height:100%;object-fit:cover;animation:fi 1s}@keyframes fi{from{opacity:0}to{opacity:1}}
+#toast{display:none;position:fixed;left:50%;top:44%;transform:translate(-50%,-50%);z-index:990;background:rgba(15,23,42,.92);border-radius:2vw;padding:1.4vw 3vw;font-size:3vw;font-weight:bold}
+/* ---- wallpaper 2: fundal + elemente mutabile (3×3) ---- */
+#wall{display:none;position:absolute;inset:0;color:#fff;overflow:hidden}
+#wbg{position:absolute;inset:0;overflow:hidden}#wbg svg{position:absolute;inset:0;width:100%;height:100%}#wcv{position:absolute;inset:0;width:100%;height:100%;display:none}
+#wgrid{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr 1fr;grid-template-rows:1fr 1fr 1fr;padding:2.2vw 2.6vw;box-sizing:border-box;z-index:3}
+body.rb #wgrid{padding-top:5.2vw}
+.wc{display:flex;flex-direction:column;gap:.8vw;min-width:0}.wc[data-c="1"]{align-items:flex-start;text-align:left}.wc[data-c="2"]{align-items:center;text-align:center}.wc[data-c="3"]{align-items:flex-end;text-align:right}
+.wc[data-r="1"]{justify-content:flex-start}.wc[data-r="2"]{justify-content:center}.wc[data-r="3"]{justify-content:flex-end}
+.wi{white-space:nowrap;text-shadow:0 .3vw 1.6vw rgba(0,0,0,.55);line-height:1.05}
+.wi.clk{font-weight:900}.wi.clk.s1{font-size:min(7vw,15vh)}.wi.clk.s2{font-size:min(11vw,23vh)}.wi.clk.s3{font-size:min(15vw,31vh)}
+.wi.dat.s1{font-size:min(1.9vw,4vh)}.wi.dat.s2{font-size:min(2.6vw,5.4vh)}.wi.dat.s3{font-size:min(3.6vw,7.4vh)}.wi.dat{opacity:.9}
+.wi.msg{font-weight:bold}.wi.msg.s1{font-size:min(2.2vw,4.6vh)}.wi.msg.s2{font-size:min(3.4vw,7vh)}.wi.msg.s3{font-size:min(5vw,10vh)}
+.wi.brand{display:flex;align-items:center;gap:1vw;font-weight:900;letter-spacing:.2vw}.wi.brand i{font-style:normal;display:flex;align-items:center;justify-content:center;border-radius:1.2vw;background:linear-gradient(135deg,#0ea5e9,#7c3aed);box-shadow:0 0 2vw rgba(124,58,237,.6)}
+.wi.brand.s1{font-size:min(1.7vw,3.6vh)}.wi.brand.s1 i{width:3.2vw;height:3.2vw;font-size:2vw}.wi.brand.s2{font-size:min(2.4vw,5vh)}.wi.brand.s2 i{width:4.4vw;height:4.4vw;font-size:2.8vw}.wi.brand.s3{font-size:min(3.6vw,7.4vh)}.wi.brand.s3 i{width:6.4vw;height:6.4vw;font-size:4vw}
+.wi.box{display:flex;align-items:center;gap:1.4vw;border-radius:2vw;padding:.9vw 2vw;white-space:nowrap}body.wg .wi.box{background:rgba(2,6,23,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.wi.box .ic{font-size:1.5em}.wi.box b{font-weight:900}.wi.box small{display:block;font-size:.5em;opacity:.85;font-weight:bold;letter-spacing:.05em}.wi.box .tx{text-align:left;line-height:1.15}
+.wi.box.s1{font-size:min(2.4vw,5vh)}.wi.box.s2{font-size:min(3.6vw,7.4vh)}.wi.box.s3{font-size:min(5.4vw,11vh)}
+.wi.wx .d{font-size:.48em;font-weight:normal;opacity:.95;line-height:1.35}
+#wall.lt{color:#0f172a}#wall.lt .wi{text-shadow:none}body.wg #wall.lt .wi.box{background:rgba(255,255,255,.6)}
+#wall.noanim *{animation:none!important}
+/* fundaluri vechi */
+#wbg.w-night{background:radial-gradient(circle at 20% 30%,rgba(255,255,255,.9) 0 1px,transparent 2px),radial-gradient(circle at 70% 20%,rgba(255,255,255,.8) 0 1px,transparent 2px),radial-gradient(circle at 40% 70%,rgba(255,255,255,.7) 0 1px,transparent 2px),radial-gradient(circle at 85% 60%,rgba(255,255,255,.8) 0 1px,transparent 2px),radial-gradient(circle at 10% 85%,rgba(255,255,255,.6) 0 1px,transparent 2px),radial-gradient(ellipse at 50% 120%,#1e3a8a,#020617 70%)}
+#wbg.w-aurora{background:radial-gradient(ellipse at 30% 20%,rgba(16,185,129,.55),transparent 55%),radial-gradient(ellipse at 75% 35%,rgba(139,92,246,.5),transparent 55%),linear-gradient(180deg,#020617,#0b1d2e 70%,#03111c)}
+#wbg.w-sunset{background:linear-gradient(180deg,#1e1b4b 0%,#7c3aed 35%,#ec4899 62%,#f97316 85%,#fbbf24 100%)}
+#wbg.w-city{background:linear-gradient(180deg,#020617 0%,#0f172a 60%,#1e293b 100%)}
+#wbg.w-red{background:radial-gradient(ellipse at 50% 110%,#7f1d1d,#2b0a0a 60%,#0a0202)}
+#wbg.w-car,#wbg.w-tail{background:radial-gradient(ellipse at 60% 85%,#2a0b2e,#020617 70%)}#wbg.w-car{background:radial-gradient(ellipse at 50% 80%,#1e1b4b,#020617 70%)}
+#wbg .carw{position:absolute;bottom:4vw;right:2vw;width:46%;height:24.6vw;max-height:70%}#wbg .carw img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 0 2vw rgba(56,189,248,.45))}
+#wbg .glow{position:absolute;left:4%;width:92%;top:39%;height:18%;background:radial-gradient(ellipse at 50% 50%,rgba(255,30,30,.95),rgba(255,30,30,0) 70%);mix-blend-mode:screen;animation:breathe 3.6s ease-in-out infinite alternate}
+#wbg .glow2{position:absolute;left:-15%;width:130%;top:20%;height:70%;background:radial-gradient(ellipse at 50% 50%,rgba(255,0,40,.35),rgba(255,0,40,0) 70%);animation:breathe 3.6s ease-in-out infinite alternate}
+@keyframes breathe{from{opacity:.25}to{opacity:1}}
+#wbg.w-black{background:#000}
+/* noi */
+.road{position:absolute;left:-50%;bottom:-8%;width:200%;height:70%;transform:perspective(26vw) rotateX(72deg);transform-origin:50% 100%;background:linear-gradient(90deg,transparent 47.6%,#e5e7eb 47.6% 47.9%,transparent 47.9% 52.1%,#e5e7eb 52.1% 52.4%,transparent 52.4%),repeating-linear-gradient(180deg,#facc15 0 3vw,transparent 3vw 7vw) 50% 0/0.6% 100% no-repeat,#1c1c27;animation:roadmv .7s linear infinite}
+@keyframes roadmv{to{background-position:0 0,50% 7vw,0 0}}
+@keyframes hlmv{from{transform:translateY(0);opacity:.2}to{transform:translateY(112px);opacity:1}}.hl{animation:hlmv 3s cubic-bezier(.55,0,1,.45) infinite}
+.synthg{position:absolute;left:-50%;bottom:-10%;width:200%;height:62%;transform:perspective(24vw) rotateX(70deg);transform-origin:50% 100%;background:repeating-linear-gradient(90deg,rgba(232,121,249,.8) 0 .25vw,transparent .25vw 6vw),repeating-linear-gradient(180deg,rgba(232,121,249,.8) 0 .25vw,transparent .25vw 5vw),#0d0221;animation:synmv 1.6s linear infinite}
+@keyframes synmv{to{background-position:0 0,0 5vw,0 0}}
+.blob{position:absolute;border-radius:50%;animation:blobmv 18s ease-in-out infinite alternate}
+@keyframes blobmv{0%{transform:translate(0,0) scale(1)}50%{transform:translate(8vw,-2vw) scale(1.2)}100%{transform:translate(-6vw,2vw) scale(.9)}}
+.wv{position:absolute;left:0;width:200%;animation:wvmv linear infinite}.wv svg{position:static!important;width:100%;height:100%}
+@keyframes wvmv{to{transform:translateX(-50%)}}
+.cloud{position:absolute;border-radius:50%;background:radial-gradient(ellipse,rgba(148,163,184,.35),rgba(148,163,184,0) 70%);animation:cloudmv linear infinite}
+@keyframes cloudmv{from{transform:translateX(-40vw)}to{transform:translateX(120vw)}}
+.dash{animation:dashmv linear infinite}@keyframes dashmv{to{stroke-dashoffset:0}}
+.sparkle{animation:breathe 2.4s ease-in-out infinite alternate}
+
+body.pv #pausebox,body.pv #chgbox,body.pv #waitbar,body.pv #cashbox,body.pv #bonbar,body.pv #hello,body.pv #rbar,body.pv #phs,body.pv #err,body.pv #chg,body.pv #bclip,body.pv #ticker,body.pv #qrbox,body.pv #laybar,body.pv #toast,body.pv #conftxt,body.pv #confetti{display:none!important}
 </style></head><body>
 <div id="pair"><h1>DRIVE IQ · ecran mașină</h1><p>Scrie codul din telefon: DRIVE IQ → 🚘 Tesla → „Prin internet”</p>
 <input id="code" placeholder="xxxx-xxxx-xxxx" autocomplete="off" autocapitalize="off" spellcheck="false"><button id="go">Conectează</button><p id="perr"></p></div>
 <div id="wrap">
-<div id="offer"><div class="l" id="op">OFERTĂ</div><div class="v" id="okm">–</div><div class="s">lei / km</div><div class="row"><span id="oh"></span><span id="od"></span><span id="of"></span></div></div>
-<div class="t"><div class="l">AZI</div><div class="v" id="a">–</div><div class="s" id="n"></div></div>
-<div class="t" id="tph"><div class="l">LEI / ORĂ</div><div class="v" id="ph">–</div><div class="s" id="w"></div></div>
-<div class="t" id="tg"><div class="l">OBIECTIV</div><div class="v" id="g">–</div><div class="s">din ziua de azi</div></div>
+<div id="offer"><div class="l" id="op">OFERTĂ</div><div class="v" id="okm">–</div><div class="s">lei / km</div><div class="row"><span class="money" id="oh"></span><span id="od"></span><span class="money" id="of"></span></div><div id="oaddr"><div id="oa1"></div><div id="oa2"></div></div><div id="cd"><i id="cdi"></i></div></div>
+<div id="mapbox"><div id="map"></div><div id="minfo"></div></div>
+<div class="t" id="ta"><div class="l">AZI</div><div class="v money" id="a">–</div><div class="s" id="n"></div></div>
+<div class="t" id="tph"><div class="l">LEI / ORĂ</div><div class="v money" id="ph">–</div><div class="s" id="w"></div></div>
+<div class="t" id="tg"><div class="l">OBIECTIV</div><div class="v" id="g">–</div><svg id="gring" viewBox="0 0 120 120"><circle class="bg" cx="60" cy="60" r="50"/><circle class="fg" id="gfg" cx="60" cy="60" r="50" stroke-dasharray="314.16" stroke-dashoffset="314.16"/><text x="60" y="62" id="gpct">0%</text></svg><div class="s" id="gs">din ziua de azi</div></div>
+<div class="t" id="tc" style="display:none"><div class="v" id="clk">--:--</div><div class="s" id="dat"></div></div>
+<div class="t" id="tn" style="display:none"><div class="l">CURSE AZI</div><div class="v" id="nn">–</div><div class="s" id="nw"></div></div>
+<div class="t" id="tkm" style="display:none"><div class="l">KM AZI</div><div class="v" id="km">–</div><div class="s">GPS, toată tura</div></div>
+<div class="t" id="tlpk" style="display:none"><div class="l">LEI / KM AZI</div><div class="v" id="lpk">–</div><div class="s">media curselor</div></div>
+<div class="t" id="tlast" style="display:none"><div class="l">ULTIMA CURSĂ</div><div class="v money" id="lst">–</div><div class="s" id="lsts"></div></div>
+<div class="t" id="tbon" style="display:none"><div class="l">🏆 BONUSURI</div><div class="list" id="bonl"></div></div>
+<div class="t" id="trec" style="display:none"><div class="l">🥇 RECORDUL TĂU</div><div class="v money" id="rec">–</div><div class="s" id="recs"></div></div>
+<div class="t" id="tpace" style="display:none"><div class="l">📈 ULTIMA ORĂ</div><div class="v money" id="pace">–</div><div class="s" id="paces"></div></div>
+<div class="t" id="tfc" style="display:none"><div class="l">🔮 PROGNOZA TUREI</div><div class="v money" id="fc">–</div><div class="s" id="fcs"></div></div>
+<div class="t" id="tl5" style="display:none"><div class="l">📋 ULTIMELE OFERTE</div><div class="list" id="l5"></div></div>
+<div class="t" id="trate" style="display:none"><div class="l">📡 OFERTE / ORĂ</div><div class="v" id="rate">–</div><div class="s" id="rates"></div></div>
+<div class="t" id="twx" style="display:none"><div class="l">🌦 VREMEA</div><div class="v" id="twxv">–</div><div class="s" id="twxs"></div></div>
+<div class="t" id="tomap" style="display:none"><div id="omap"></div><div id="ominfo"></div></div>
+<div id="ridebox"><div id="rclk">--:--</div><div id="rdat"></div><div id="rmsg"></div></div>
 </div><div id="err">DRIVE IQ · aștept telefonul…</div><button id="chg" style="display:none">schimbă codul</button>
+<div id="full"><video id="vid" src="clip.mp4" muted loop playsinline preload="none"></video><div id="wall"><div id="wbg"></div><canvas id="wcv"></canvas><div id="wgrid"></div></div><img id="slide" alt=""><div id="logo"><div class="bolt">⚡</div><div class="big">DRIVE IQ</div><div class="tag">asistentul șoferului de ridesharing</div></div></div>
+<button id="bclip" title="clipul de prezentare">🎬</button>
+<div id="cashbox"><div class="ct">💵 DE PLATĂ · NUMERAR</div><div id="cashamt">0,00 lei</div><div id="cashsub"></div></div>
+<button id="bonbar"></button>
+<div id="waitbar"></div>
+<div class="ov" id="pausebox"><div class="l1">☕ PAUZĂ</div><div class="big" id="pzt">0:00</div><div class="l2" id="pzw"></div></div>
+<div class="ov" id="chgbox"><div class="l1">🔌 LA ÎNCĂRCARE</div><div class="big" id="cgt">0:00</div><div class="row3"><div>azi<b class="money" id="cga">–</b></div><div>km azi<b id="cgk">–</b></div><div>lei / kWh<b class="money" id="cgl">–</b></div></div><div class="x">atinge ecranul ca să închizi</div></div>
+<div class="ov" id="hello"><div class="h1" id="h1"></div><div class="h2" id="h2"></div><div class="h3" id="h3"></div></div>
+<div class="ov" id="qrbox"><div class="q1">Și tu ești șofer? Scanează 🙂</div><div id="qr"></div><div class="q2">DRIVE IQ · asistentul șoferului de ridesharing · atinge ca să închizi</div></div>
+<canvas id="confetti"></canvas><div id="conftxt"></div>
+<div id="ticker"><span id="tks"></span></div><div id="phs"></div>
+<div id="rbar"><button id="rpz">⏸</button><button id="rhide">🙈</button><button id="rscr">🖼</button><button id="rchg">🔌</button><button id="rqr">🔲</button><button id="rlay">🧩</button></div>
+<div id="laybar"><button id="lprev">◀</button><button id="lnext">▶</button><button id="lwide">⤢</button><button id="lreset">↺</button><button id="lok">✓</button><span>atinge o căsuță</span></div>
+<div id="toast"></div>
 <script>
 var $=function(i){return document.getElementById(i)},enc=new TextEncoder(),RELAY='https://ntfy.sh/';
 var code=null,key=null,topic=null,es=null,cur=null,curRecv=0,lastId=null,lastMsgAt=0;
@@ -36,29 +163,344 @@ async function start(c){
  c=norm(c);if(!/^[a-z2-9]{4}-[a-z2-9]{4}-[a-z2-9]{4}$/.test(c)){showPair(c?'Codul are 12 caractere (ex. ab3k-x9pm-q2ze)':'');return}
  if(!window.crypto||!crypto.subtle){showPair('Browserul nu suportă criptarea (pagina trebuie deschisă cu https://)');return}
  code=c;save('diq',c);topic='diq'+hex(await sha('t:'+c)).slice(0,20);
- key=await crypto.subtle.importKey('raw',await sha('k:'+c),{name:'AES-GCM'},false,['decrypt']);
+ key=await crypto.subtle.importKey('raw',await sha('k:'+c),{name:'AES-GCM'},false,['decrypt','encrypt']);
  $('pair').style.display='none';$('wrap').style.display='flex';$("chg").style.display="block";$('err').style.display='block';
  if(location.hash)history.replaceState(null,'',location.pathname);
  await poll();listen();
 }
 async function dec(b64){var raw=Uint8Array.from(atob(b64.trim()),function(ch){return ch.charCodeAt(0)});
  var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:raw.slice(0,12)},key,raw.slice(12));return JSON.parse(new TextDecoder().decode(pt))}
+async function inflate(b64){var raw=Uint8Array.from(atob(b64),function(ch){return ch.charCodeAt(0)});
+ var st=new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'));return JSON.parse(await new Response(st).text())}
 async function take(m,live){if(!m||m.event!=='message'||m.id===lastId)return;
- try{var d=await dec(m.message);lastId=m.id;var at=live?Date.now():m.time*1000;if(at<lastMsgAt)return;lastMsgAt=at;cur=d;curRecv=at;draw()}catch(e){$('err').textContent='DRIVE IQ · mesaj necitibil – verifică codul (schimbă codul, sus în dreapta)'}}
+ try{var body=m.message;if(m.attachment&&m.attachment.url){body=await (await fetch(m.attachment.url,{cache:'no-store'})).text()}
+  var d=await dec(body);if(d&&d.z)d=await inflate(d.z);lastId=m.id;var at=live?Date.now():m.time*1000;if(at<lastMsgAt)return;lastMsgAt=at;cur=d;curRecv=at;draw()}catch(e){$('err').textContent=(typeof DecompressionStream==='undefined'?'DRIVE IQ · browserul mașinii e prea vechi pentru mesajele mari – actualizează software-ul mașinii':'DRIVE IQ · mesaj necitibil – verifică codul (schimbă codul, jos în dreapta)')}}
 async function poll(){try{var r=await fetch(RELAY+topic+'/json?poll=1&since=12h',{cache:'no-store'});var tx=await r.text();
  var ls=tx.trim().split('\n').filter(Boolean);if(ls.length)await take(JSON.parse(ls[ls.length-1]),false);else if(!cur)$('err').textContent='DRIVE IQ · conectat la releu · aștept prima ofertă / cursă din telefon'}catch(e){}}
 function listen(){if(es)es.close();es=new EventSource(RELAY+topic+'/sse');es.onmessage=function(ev){try{take(JSON.parse(ev.data),true)}catch(e){}};
  es.onerror=function(){$('err').textContent='DRIVE IQ · fără internet în mașină – reîncerc…'}}
+var lmap=null,layer=null,mapKey='',geoC={};
+function geo(q){if(geoC[q])return Promise.resolve(geoC[q]);
+ return fetch('https://photon.komoot.io/api/?limit=1&lat=44.43&lon=26.10&q='+encodeURIComponent(q.replace(/Bucharest/ig,'București'))).then(function(r){return r.json()}).then(function(j){var f=j.features&&j.features[0];if(!f)throw 0;var c=[f.geometry.coordinates[1],f.geometry.coordinates[0]];geoC[q]=c;return c})}
+function showMap(a1,a2){var box=$('mapbox');if(!window.L||!a1||!a2){box.style.display='none';$('wrap').classList.remove('withmap');return}
+ box.style.display='block';$('wrap').classList.add('withmap');if(!lmap){lmap=L.map('map',{zoomControl:false,attributionControl:true});L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',maxZoom:19}).addTo(lmap);lmap.setView([44.43,26.10],12)}
+ setTimeout(function(){lmap.invalidateSize()},50);var k=a1+'|'+a2;if(k===mapKey)return;mapKey=k;$('minfo').textContent='caut adresele…';
+ Promise.all([geo(a1),geo(a2)]).then(function(p){if(k!==mapKey)return;if(layer)layer.remove();layer=L.layerGroup().addTo(lmap);
+  L.circleMarker(p[0],{radius:11,color:'#fff',weight:3,fillColor:'#22c55e',fillOpacity:1}).addTo(layer);L.circleMarker(p[1],{radius:11,color:'#fff',weight:3,fillColor:'#ef4444',fillOpacity:1}).addTo(layer);
+  lmap.fitBounds(L.latLngBounds(p).pad(.25));
+  return fetch('https://router.project-osrm.org/route/v1/driving/'+p[0][1]+','+p[0][0]+';'+p[1][1]+','+p[1][0]+'?overview=full&geometries=geojson').then(function(r){return r.json()}).then(function(j){if(k!==mapKey)return;var rt=j.routes&&j.routes[0];if(!rt)throw 0;
+   var line=L.geoJSON(rt.geometry,{style:{color:'#38bdf8',weight:6,opacity:.9}}).addTo(layer);lmap.fitBounds(line.getBounds().pad(.2));
+   $('minfo').textContent='🟢 → 🔴 '+(rt.distance/1000).toFixed(1).replace('.',',')+' km · '+Math.round(rt.duration/60)+' min'})})
+ .catch(function(){if(k===mapKey)$('minfo').textContent='adresa nu s-a găsit pe hartă'})}
 function ago(ms){var m=Math.round(ms/60000);return m<1?'acum':m<60?'acum '+m+' min':'acum '+Math.floor(m/60)+' h'}
-function draw(){if(!cur)return;var d=cur,t=d.t,now=Date.now();
+var mode0='',manual=false,fullMode='',bonState='',bonId=0,bonTimer=null,bonResShown=0;
+function shortAddr(a){return(a||'').replace(/,?\s*(Bucure[șşs]ti|Bucharest|Rom[âa]nia|Ilfov)\b/gi,'').replace(/\b\d{6}\b/g,'').replace(/\s*,\s*$/,'').replace(/\s{2,}/g,' ').trim()}
+async function sendBon(id){var iv=crypto.getRandomValues(new Uint8Array(12));
+ var ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,enc.encode(JSON.stringify({cmd:'bon',id:id,at:Date.now()}))));
+ var all=new Uint8Array(12+ct.length);all.set(iv,0);all.set(ct,12);var b64=btoa(String.fromCharCode.apply(null,all));
+ return fetch(RELAY+topic+'c',{method:'POST',body:b64})}
+$('bonbar').onclick=function(){var b=$('bonbar');
+ if(bonState==='ready'){bonState='confirm';b.className='confirm';b.textContent='Atinge din nou ca să scoți bonul';clearTimeout(bonTimer);bonTimer=setTimeout(function(){if(bonState==='confirm'){bonState='ready';draw()}},5000);return}
+ if(bonState==='confirm'){bonState='sent';clearTimeout(bonTimer);b.className='sent';b.textContent='Se trimite la telefon…';
+  sendBon(bonId).then(function(){b.textContent='Telefonul scoate bonul…'}).catch(function(){bonState='ready';b.className='bad';b.textContent='Nu am putut trimite – încearcă din nou'});
+  bonTimer=setTimeout(function(){if(bonState==='sent'){bonState='ready';draw()}},25000)}};
+function setFull(m){if(m===fullMode)return;fullMode=m;var f=$('full'),v=$('vid'),l=$('logo');
+ f.style.display=m?'flex':'none';l.style.display=m==='logo'?'flex':'none';v.style.display=m==='clip'?'block':'none';$('wall').style.display=m==='wall'?'flex':'none';$('slide').style.display=m==='slides'?'block':'none';
+ if(m==='clip'){var fb=function(){if(fullMode==='clip'&&(v.paused||v.currentTime<0.1)){v.style.display='none';l.style.display='flex'}};
+  try{var pr=v.play();if(pr&&pr.catch)pr.catch(fb)}catch(e){fb()}setTimeout(fb,4000)}else{try{v.pause()}catch(e){}}}
+$('bclip').onclick=function(){manual=!manual;draw()};$('full').onclick=function(){if(manual){manual=false;draw()}};
+var wx=null,wxAt=0,wxLoc='';
+var WX={0:['☀','senin'],1:['🌤','mai mult senin'],2:['⛅','parțial noros'],3:['☁','noros'],45:['🌫','ceață'],48:['🌫','ceață'],51:['🌦','burniță'],53:['🌦','burniță'],55:['🌧','burniță'],61:['🌦','ploaie slabă'],63:['🌧','ploaie'],65:['🌧','ploaie puternică'],66:['🌧','ploaie înghețată'],67:['🌧','ploaie înghețată'],71:['🌨','ninsoare slabă'],73:['🌨','ninsoare'],75:['❄','ninsoare puternică'],77:['🌨','ninsoare'],80:['🌦','averse'],81:['🌧','averse'],82:['⛈','averse puternice'],85:['🌨','averse de ninsoare'],86:['🌨','averse de ninsoare'],95:['⛈','furtună'],96:['⛈','furtună cu grindină'],99:['⛈','furtună cu grindină']};
+function loadWx(loc){var la=loc?loc[0]:44.43,lo=loc?loc[1]:26.10,k=la+','+lo;if(wx&&k===wxLoc&&Date.now()-wxAt<15*60000)return;wxLoc=k;wxAt=Date.now();
+ fetch('https://api.open-meteo.com/v1/forecast?latitude='+la+'&longitude='+lo+'&current=temperature_2m,weather_code&hourly=precipitation_probability&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset&timezone=auto&forecast_days=2')
+ .then(function(r){return r.json()}).then(function(j){wx=j;drawWx()}).catch(function(){})}
+function drawWx(){if(cur)draw()}
+var ZI=['duminică','luni','marți','miercuri','joi','vineri','sâmbătă'],LU=['ian','feb','mar','apr','mai','iun','iul','aug','sep','oct','noi','dec'];
+function show(id,on){$(id).style.display=on?'flex':'none'}
+function draw(){if(!cur)return;var d=cur,t=d.t,now=Date.now(),cf=d.cfg||{a:1,ph:1,g:1,clk:0,ride:'normal',rs:1,map:1};
+ var D=new Date(),hm=('0'+D.getHours()).slice(-2)+':'+('0'+D.getMinutes()).slice(-2),dt=ZI[D.getDay()]+', '+D.getDate()+' '+LU[D.getMonth()];
+ $('clk').textContent=hm;$('dat').textContent=dt;
+$('rclk').textContent=hm;$('rdat').textContent=dt;
  $('a').textContent=t.a;$('n').textContent=t.n+' curse';$('ph').textContent=t.ph;$('w').textContent=t.w+' lucrate';$('g').textContent=t.g<0?'–':t.g+'%';
- var o=d.o,box=$('offer'),age=(d.oa||0)+(now-curRecv);
- if(o&&age<45000){box.style.display='flex';box.className=o.k;$('op').textContent=o.p.toUpperCase()+(o.pay=='CASH'?' · 💵 CASH':'');$('okm').textContent=o.km;
-  $('oh').textContent=o.h?o.h+' lei/oră':'';$('od').textContent=o.d+' km';$('of').textContent=o.f+' lei';$('tph').style.display='none';$('tg').style.display='none'}
- else{box.style.display='none';$('tph').style.display='flex';$('tg').style.display='flex'}
+ var ride=!!d.ride&&cf.ride&&cf.ride!=='normal';
+ var o=d.o,box=$('offer'),age=(d.oa||0)+(now-curRecv),live=o&&age<45000;
+ if(live){box.style.display='flex';box.className=o.k;$('op').textContent=o.p.toUpperCase()+(o.pay=='CASH'&&(!ride||cf.rs)?' · 💵 CASH':'');$('okm').textContent=o.km;
+  var sums=!ride||cf.rs;$('oh').textContent=sums&&o.h?o.h+' lei/oră':'';$('od').textContent=o.d+' km';$('of').textContent=sums?o.f+' lei':'';
+  show('tph',0);show('tg',0);show('tc',0);show('ridebox',0);show('ta',!ride&&cf.a);if(cf.map!==false)showMap(o.a1,o.a2);else showMap(null,null)}
+ else{box.style.display='none';$('mapbox').style.display='none';$('wrap').classList.remove('withmap');
+  if(ride){show('ta',0);show('tph',0);show('tg',0);show('tc',0);show('ridebox',1);
+   $('rclk').style.display=cf.ride==='black'?'none':'block';$('rdat').style.display=cf.ride==='clock'?'block':'none';
+   $('rmsg').style.display=cf.ride==='msg'?'block':'none';$('rmsg').textContent=cf.msg||'';if(cf.ride==='msg'){$('rclk').style.fontSize='8vw'}else{$('rclk').style.fontSize='20vw'}}
+  else{show('ridebox',0);show('ta',cf.a);show('tph',cf.ph);show('tg',cf.g);show('tc',cf.clk);
+   if(!cf.a&&!cf.ph&&!cf.g&&!cf.clk)show('tc',1)}}
+ // căsuțe noi
+ $('nn').textContent=t.n;$('nw').textContent=t.w+' lucrate';$('km').textContent=t.km||'–';$('lpk').textContent=t.lpk||'–';
+ if(t.last){$('lst').textContent=t.last.f;$('lsts').textContent=t.last.p+' · acum '+t.last.m+' min'}else{$('lst').textContent='–';$('lsts').textContent=''}
+ if(!live&&!ride){show('tn',cf.n);show('tkm',cf.km);show('tlast',cf.last);show('tlpk',cf.lpk)}else{show('tn',0);show('tkm',0);show('tlast',0);show('tlpk',0)}
+ if(!live&&!ride&&!cf.a&&!cf.ph&&!cf.g&&!cf.clk&&!cf.n&&!cf.km&&!cf.last&&!cf.lpk)show('tc',1);else if(!live&&!ride)show('tc',cf.clk);
+ // T7: adresele mari
+ if(live&&cf.addr!==false&&o.a1&&o.a2){$('oaddr').style.display='block';$('oa1').textContent='🟢 '+shortAddr(o.a1);$('oa2').textContent='🔴 '+shortAddr(o.a2)}else $('oaddr').style.display='none';
+ // T17: SCOATE BON din Tesla
+ var bb=$('bonbar'),bo=d.bon,br=d.bonRes;
+ if(br&&br.at!==bonResShown&&(Date.now()-curRecv)<15000){bonResShown=br.at;bonState='res';clearTimeout(bonTimer);bb.style.display='block';bb.className=br.ok?'ok':'bad';bb.textContent=(br.ok?'✓ ':'✕ ')+(br.msg||'');
+  bonTimer=setTimeout(function(){bonState='';draw()},6000)}
+ else if(bonState!=='res'&&bonState!=='confirm'&&bonState!=='sent'){
+  if(bo){bonId=bo.id;bonState='ready';bb.style.display='block';bb.className='';bb.textContent='🧾 SCOATE BON · '+bo.p+' '+bo.a+' lei'}else{bonState='';bb.style.display='none'}}
+ tilesX(d,cf,t,live,ride);var vis=TILES.filter(function(i){return $(i).style.display!=='none'}).length;
+ $('wrap').classList.toggle('many',vis>6&&vis<=9);$('wrap').classList.toggle('lots',vis>9);
+ // temă și mărime
+ var th=cf.th==='auto'?(isDay(cf)?'light':''):cf.th;document.body.className=(th?'th-'+th:'')+(cf.big?' big':'')+(hideM?' hidem':'')+(layOn?' lay':'')+(PREVIEW?' pv':'');
+ // ecran complet: clip / logo (între oferte sau cu client), sau clipul pornit de mână cu 🎬; oferta are mereu prioritate
+ if(d.pv&&!live){manual=false;mode0=d.pv}else mode0='';if(live){manual=false;$('qrbox').style.display='none';$('hello').style.display='none'}
+ var mode=manual?'clip':(live?'':(ride?cf.ride:(cf.idle||'tiles')));
+ if(localIdle&&load('diqIdleB')!==(cf.idle||'tiles')){localIdle='';save('diqIdle',null)}if(!live&&!manual&&localIdle&&!ride)mode=localIdle;if(layOn&&!live&&!ride)mode='';if(mode0)mode=mode0;if(mode==='slides'&&!slideN())mode=ride?'wall':'tiles';
+ setFull(mode==='clip'||mode==='logo'||mode==='wall'||mode==='slides'?mode:'');
+ drawWall(d,cf,t,hm,dt,ride);if(fullMode==='wall'&&wEls.wx)loadWx(cf.loc||null);
+ drawX(d,cf,t,live,ride,o,age);
+ // cursă cash: ecran mare cu suma de plată (pentru pasager) + bonul
+ var cb=$('cashbox'),cashOn=cf.cash!==false&&!live&&((bo&&bonState!=='res')||(bonState==='res'&&br&&br.ok));
+ if(cashOn){cb.style.display='flex';document.body.classList.add('cash');
+  if(bonState==='res'&&br&&br.ok){cb.className='done';$('cashamt').textContent='✓ Mulțumim!';$('cashsub').textContent='Bonul fiscal a fost emis · drum bun 🙂'}
+  else if(bo){cb.className='';$('cashamt').textContent=bo.a+' lei';$('cashsub').textContent=bo.p+' · plata în numerar'}}
+ else{cb.style.display='none';document.body.classList.remove('cash')}
+ $('err').style.display=ride?'none':'block';$('chg').style.display=ride||layOn?'none':'block';
  $('err').textContent='DRIVE IQ · prin internet, criptat · actualizat '+ago(now-curRecv)}
+// ===== T1–T25 =====
+var TILES=['ta','tph','tg','tc','tn','tkm','tlpk','tlast','tbon','trec','tpace','tfc','tl5','trate','twx','tomap'];
+var hideM=load('diqHide')==='1',layOn=false,laySel=null,localIdle=load('diqIdle')||'',chgAt=+(load('diqChg')||0),helloDone=false,pzState='',pzTimer=null,goalShown=load('diqGoal')||'';
+function num(v){return parseFloat(String(v||'').replace(/\./g,'').replace(',','.'))||0}
+function lei(v){return Math.round(v).toLocaleString('ro-RO')}
+function mmss(ms){var s=Math.max(0,Math.floor(ms/1000));return Math.floor(s/60)+':'+('0'+s%60).slice(-2)}
+function hm2(min){min=Math.max(0,Math.round(min));return Math.floor(min/60)+'h '+('0'+min%60).slice(-2)+'m'}
+function toast(t){var e=$('toast');e.textContent=t;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(function(){e.style.display='none'},1800)}
+function isDay(cf){var now=new Date();try{if(wx&&wx.daily&&wx.daily.sunrise){var a=new Date(wx.daily.sunrise[0]),b=new Date(wx.daily.sunset[0]);return now>a&&now<b}}catch(e){}var h=now.getHours();return h>=7&&h<18}
+function wxNeed(cf){return (cf.twx||cf.tk||cf.th==='auto')}
+function rainTxt(){try{var t=wx.hourly.time,pp=wx.hourly.precipitation_probability,now=Date.now();for(var i=0;i<t.length;i++){var ms=new Date(t[i]).getTime();if(ms>now&&ms<now+6*3600000&&pp[i]>=50){var h=new Date(ms);return '☔ ploaie de la '+('0'+h.getHours()).slice(-2)+':00'}}return 'fără ploaie în următoarele ore'}catch(e){return ''}}
+function KCOL(k){return k==='gold'?'#eab308':k==='green'?'#22c55e':k==='orange'?'#f97316':'#ef4444'}
+async function sendCmd(c){var iv=crypto.getRandomValues(new Uint8Array(12));
+ var ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,enc.encode(JSON.stringify({cmd:c,id:Date.now(),at:Date.now()}))));
+ var all=new Uint8Array(12+ct.length);all.set(iv,0);all.set(ct,12);return fetch(RELAY+topic+'c',{method:'POST',body:btoa(String.fromCharCode.apply(null,all))})}
+// --- căsuțele noi ---
+function tilesX(d,cf,t,live,ride){var x=d.x||{},idle=!live&&!ride;
+ // T4 inel
+ var ring=cf.ring!==false&&t.g>=0;$('g').style.display=ring?'none':'block';$('gring').style.display=ring?'block':'none';
+ if(ring){var pc=Math.max(0,t.g);$('gfg').style.strokeDashoffset=(314.16*(1-Math.min(pc,100)/100)).toFixed(1);$('gfg').style.stroke=pc>=100?'#eab308':'#22c55e';$('gpct').textContent=pc+'%';
+  $('gs').textContent=x.gv?(pc>=100?'🎉 atins: '+x.gv+' lei':'mai ai '+lei(Math.max(0,x.gv-(x.av||0)))+' lei'):'din ziua de azi';$('gs').className='s money'}else{$('gs').textContent='din ziua de azi';$('gs').className='s'}
+ // T3 bonusuri
+ var bo=x.bon||[];show('tbon',idle&&cf.bt&&bo.length>0);
+ $('bonl').innerHTML=bo.slice(0,3).map(function(b){var pc=Math.min(100,Math.round(b.d/Math.max(1,b.n)*100));return '<b>'+b.p+' '+b.d+'/'+b.n+'</b> · <span class="money">'+b.w+' lei</span> · '+(b.d>=b.n?'✓ gata':(b.z<=1?'ultima zi':'mai ai '+b.z+' zile'))+'<div class="bar2"><i style="width:'+pc+'%;background:'+(b.d>=b.n?'#22c55e':'#38bdf8')+'"></i></div>'}).join('');
+ // T12 record
+ show('trec',idle&&cf.rec&&x.rec>0);if(x.rec){var av=x.av||0;$('rec').textContent=lei(x.rec)+' lei';$('recs').textContent=av>x.rec?'🏆 RECORD NOU azi!':'mai ai '+lei(x.rec-av)+' lei'}
+ // T14 ritm
+ var ph=num(t.ph);show('tpace',idle&&cf.pace&&x.h1!=null);if(x.h1!=null){var ar=ph>0?(x.h1>ph*1.1?'<span style="color:#22c55e">▲</span>':x.h1<ph*0.9?'<span style="color:#ef4444">▼</span>':''):'';$('pace').innerHTML=ar+x.h1;$('paces').textContent='lei în ultima oră · media '+(ph>0?Math.round(ph):'–')+'/oră'}
+ // T21 prognoza
+ show('tfc',idle&&cf.fc);if(cf.fc){var D=new Date(),end=cf.end==null?24:cf.end,left=end-(D.getHours()+D.getMinutes()/60);if(left<0)left+=24;
+  if(ph>0){$('fc').textContent='~'+lei((x.av||0)+ph*left);$('fcs').textContent='la '+('0'+(end%24)).slice(-2)+':00 · la ritmul de acum ('+Math.round(ph)+' lei/oră)'}else{$('fc').textContent='–';$('fcs').textContent='după primele 15 min de tură'}}
+ // T13 ultimele 5
+ var hs=x.hist||[];show('tl5',idle&&cf.l5);
+ $('l5').innerHTML=hs.length?hs.slice(-5).reverse().map(function(h){return '<span style="color:'+KCOL(h.k)+'">●</span> <b>'+h.p+'</b> '+h.km+' lei/km '+(h.ok?'✓':(h.m>=2?'✗':'…'))+' <span class="ag" style="color:#64748b">· '+(h.m<1?'acum':h.m+' min')+'</span>'}).join('<br>'):'<span style="color:#64748b">nicio ofertă în ultima oră</span>';
+ // T6 oferte pe oră
+ show('trate',idle&&cf.rate);var cnt={};hs.forEach(function(h){cnt[h.p]=(cnt[h.p]||0)+1});$('rate').textContent=hs.length;
+ $('rates').textContent=Object.keys(cnt).sort(function(a,b){return cnt[b]-cnt[a]}).map(function(k){return k+' '+cnt[k]}).join(' · ')||'ultima oră';
+ // T9 vremea
+ show('twx',idle&&cf.twx);if(cf.twx&&wx&&wx.current){var w=WX[wx.current.weather_code]||['🌡',''];$('twxv').textContent=w[0]+' '+Math.round(wx.current.temperature_2m)+'°';$('twxs').textContent=w[1]+' · '+rainTxt()}
+ // T5 harta ofertelor
+ var om=idle&&cf.omap;$('tomap').style.display=om?'block':'none';if(om)drawOMap(hs);
+ applyLayout()}
+var omap=null,olayer=null,omKey='';
+function geoP(q){return fetch('https://photon.komoot.io/api/?limit=1&lat=44.43&lon=26.10&q='+encodeURIComponent(q+', București')).then(function(r){return r.json()}).then(function(j){var f=j.features&&j.features[0];if(!f)throw 0;
+ var pr=f.properties||{};return {c:[f.geometry.coordinates[1],f.geometry.coordinates[0]],z:pr.district||pr.locality||pr.suburb||pr.city||''}})}
+var geoPC={};function geoPc(q){if(geoPC[q])return Promise.resolve(geoPC[q]);return geoP(q).then(function(r){geoPC[q]=r;return r})}
+function drawOMap(hs){if(!window.L)return;if(!omap){omap=L.map('omap',{zoomControl:false,attributionControl:true});L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',maxZoom:19}).addTo(omap);omap.setView([44.43,26.10],11)}
+ setTimeout(function(){omap.invalidateSize()},60);var pts=hs.filter(function(h){return h.a}).slice(-12),k=pts.map(function(h){return h.a+h.k}).join('|');if(k===omKey)return;omKey=k;
+ if(!pts.length){$('ominfo').textContent='📍 nicio ofertă cu adresă în ultima oră';if(olayer)olayer.remove();return}
+ Promise.all(pts.map(function(h){return geoPc(h.a).then(function(r){return {r:r,h:h}}).catch(function(){return null})})).then(function(res){if(k!==omKey)return;if(olayer)olayer.remove();olayer=L.layerGroup().addTo(omap);
+  var ok=res.filter(Boolean),zc={};ok.forEach(function(o){L.circleMarker(o.r.c,{radius:9,color:'#fff',weight:2,fillColor:KCOL(o.h.k),fillOpacity:.95}).addTo(olayer);if(o.r.z)zc[o.r.z]=(zc[o.r.z]||0)+1});
+  if(ok.length)omap.fitBounds(L.latLngBounds(ok.map(function(o){return o.r.c})).pad(.3),{maxZoom:14});var top=Object.keys(zc).sort(function(a,b){return zc[b]-zc[a]})[0];
+  $('ominfo').textContent='📍 '+hs.length+' oferte în ultima oră'+(top?' · cele mai multe: '+top:'')})}
+// --- T18 aranjare ---
+function layout(){try{return JSON.parse(load('diqLay')||'{}')}catch(e){return{}}}
+function applyLayout(){var L0=layout(),ord=L0.o||[];TILES.forEach(function(id,i){var e=$(id),p=ord.indexOf(id);e.style.order=p<0?100+i:p;e.classList.toggle('wide',!!(L0.w&&L0.w[id]))})}
+function layMove(dir){if(!laySel)return;var L0=layout(),ord=(L0.o&&L0.o.length===TILES.length)?L0.o:TILES.slice();
+ var vis=ord.filter(function(i){return $(i).style.display!=='none'}),p=vis.indexOf(laySel),q=p+dir;if(p<0||q<0||q>=vis.length)return;
+ var a=ord.indexOf(vis[p]),b=ord.indexOf(vis[q]);ord[a]=vis[q];ord[b]=vis[p];L0.o=ord;save('diqLay',JSON.stringify(L0));applyLayout()}
+TILES.forEach(function(id){$(id).addEventListener('click',function(){if(!layOn)return;if(laySel)$(laySel).classList.remove('sel');laySel=id;$(id).classList.add('sel')})});
+$('lprev').onclick=function(){layMove(-1)};$('lnext').onclick=function(){layMove(1)};
+$('lwide').onclick=function(){if(!laySel)return;var L0=layout();L0.w=L0.w||{};L0.w[laySel]=!L0.w[laySel];save('diqLay',JSON.stringify(L0));applyLayout()};
+$('lreset').onclick=function(){save('diqLay',null);applyLayout();toast('Aranjare implicită')};
+$('lok').onclick=function(){layOn=false;if(laySel)$(laySel).classList.remove('sel');laySel=null;$('laybar').style.display='none';draw()};
+// --- T16 telecomandă ---
+$('rhide').onclick=function(){hideM=!hideM;save('diqHide',hideM?'1':null);toast(hideM?'🙈 Banii ascunși':'💰 Banii la vedere');draw()};
+$('rscr').onclick=function(){var L1=['tiles','wall'].concat(slideN()?['slides']:[]).concat(['clip','logo']),cfi=(cur&&cur.cfg&&cur.cfg.idle)||'tiles',c0=localIdle||cfi,i=L1.indexOf(c0);
+ localIdle=L1[(i+1)%L1.length];if(localIdle===cfi)localIdle='';save('diqIdle',localIdle||null);save('diqIdleB',cfi);
+ toast({tiles:'🔲 Căsuțe',wall:'🖼 Wallpaper',slides:'📷 Pozele tale',clip:'🎬 Clip',logo:'⚡ Logo'}[localIdle||cfi]);draw()};
+$('rlay').onclick=function(){layOn=!layOn;$('laybar').style.display=layOn?'flex':'none';if(!layOn&&laySel){$(laySel).classList.remove('sel');laySel=null}if(layOn){localIdle='';toast('🧩 Alege o căsuță')}draw()};
+$('rchg').onclick=function(){chgAt=Date.now();save('diqChg',String(chgAt));draw()};$('chgbox').onclick=function(){chgAt=0;save('diqChg',null);draw()};
+$('rqr').onclick=function(){openQr()};$('qrbox').onclick=function(){$('qrbox').style.display='none'};
+$('rpz').onclick=function(){var b=$('rpz'),x=(cur&&cur.x)||{},paused=!!x.pause,c=paused?'resume':'pause';
+ if(pzState!=='confirm'){pzState='confirm';b.className='warn';b.textContent=paused?'▶ Reiau tura?':'☕ Pun pauză?';toast('Atinge din nou ca să confirmi');clearTimeout(pzTimer);pzTimer=setTimeout(function(){pzState='';draw()},5000);return}
+ pzState='sent';b.textContent='…';sendCmd(c).then(function(){toast(paused?'▶ Tura se reia…':'⏸ Tura intră pe pauză…')}).catch(function(){toast('Nu am putut trimite')});clearTimeout(pzTimer);pzTimer=setTimeout(function(){pzState='';draw()},4000)};
+$('pausebox').onclick=function(){if(cur&&cur.cfg&&cur.cfg.rem!==false)$('rpz').onclick()};
+// --- T25 QR ---
+function openQr(){var u=(cur&&cur.cfg&&cur.cfg.qr)||'';if(!u)return;$('qrbox').style.display='flex';
+ var go=function(){try{var q=qrcode(0,'M');q.addData(u);q.make();$('qr').innerHTML=q.createSvgTag({cellSize:8,margin:2,scalable:true})}catch(e){$('qr').textContent=u}};
+ if(window.qrcode)go();else{var sc=document.createElement('script');sc.src='https://unpkg.com/qrcode-generator@1.4.4/qrcode.js';sc.onload=go;sc.onerror=function(){$('qr').textContent=u};document.head.appendChild(sc)}}
+// --- T22 poze ---
+var slides=[],slideIdx=0,slideAt=0,slFetch='';
+function slideN(){return slides.length}
+function loadSlides(){slides=[];var n=+(load('diqSn')||0);for(var i=0;i<n;i++){var b=load('diqS'+i);if(b)slides.push(b)}}
+var slTry=0;async function fetchSlides(sl){if(!sl||!sl.id||slFetch===sl.id||load('diqSid')===sl.id||Date.now()-slTry<60000)return;slFetch=sl.id;slTry=Date.now();
+ try{var tx=await (await fetch(RELAY+topic+'i/json?poll=1&since=24h',{cache:'no-store'})).text(),got={};
+  var ls=tx.trim().split('\n').filter(Boolean).map(function(l){try{return JSON.parse(l)}catch(e){return null}}).filter(function(m){return m&&m.attachment&&m.attachment.url});
+  for(var i=0;i<ls.length;i++){try{var d=await dec(await (await fetch(ls[i].attachment.url)).text());if(d.set===sl.id)got[d.i]=d.img}catch(e){}}
+  var keys=Object.keys(got);if(keys.length>=sl.n){for(var j=0;j<20;j++)save('diqS'+j,null);var k2=keys.sort(function(a,b){return a-b});
+   try{k2.forEach(function(k,i){localStorage.setItem('diqS'+i,got[k])});save('diqSn',String(k2.length));save('diqSid',sl.id)}catch(e){toast('Prea multe poze pentru memoria browserului')}
+   loadSlides();toast('📷 '+slides.length+' poze primite')}else{slFetch='';if(!keys.length)$('err').textContent='DRIVE IQ · pozele au expirat pe releu – trimite-le din nou din telefon'}
+ }catch(e){slFetch=''}}
+function drawSlides(sec){if(fullMode!=='slides'||!slides.length)return;var now=Date.now(),im=$('slide');
+ if(!slideAt||now-slideAt>=(sec||8)*1000||!im.src){slideAt=now;slideIdx=(slideIdx+1)%slides.length;im.src='data:image/jpeg;base64,'+slides[slideIdx];im.style.animation='none';void im.offsetWidth;im.style.animation=''}}
+// --- T11 confetti ---
+function confetti(txt){var cv=$('confetti'),c=cv.getContext('2d'),W=cv.width=innerWidth,H=cv.height=innerHeight,P=[],t0=Date.now();cv.style.display='block';$('conftxt').textContent=txt;$('conftxt').style.display='block';
+ for(var i=0;i<180;i++)P.push({x:Math.random()*W,y:-Math.random()*H*.6,vx:(Math.random()-.5)*4,vy:2+Math.random()*4,r:4+Math.random()*7,a:Math.random()*6,c:['#22c55e','#eab308','#38bdf8','#f472b6','#a78bfa','#fff'][i%6]});
+ (function f(){c.clearRect(0,0,W,H);P.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.a+=.15;c.save();c.translate(p.x,p.y);c.rotate(p.a);c.fillStyle=p.c;c.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);c.restore()});
+  if(Date.now()-t0<6000)requestAnimationFrame(f);else{cv.style.display='none';$('conftxt').style.display='none'}})()}
+// --- desen ---
+function drawX(d,cf,t,live,ride,o,age){var x=d.x||{},now=Date.now(),since=now-curRecv;
+ // T1 semafor + T2 numărătoare
+ $('offer').classList.toggle('semfull',!!(live&&cf.sem));if(live&&cf.sem)$('mapbox').style.display='none';
+ var ttl=((o&&o.ttl)||15)*1000;if(live&&cf.cd!==false&&age<ttl+1500){$('cd').style.display='block';var r=Math.max(0,1-age/ttl);$('cdi').style.width=(r*100).toFixed(1)+'%';$('cd').classList.toggle('low',r<.3)}else $('cd').style.display='none';
+ // vremea pentru căsuță / bandă / temă automată
+ if(wxNeed(cf))loadWx(cf.loc||null);
+ // T8 așteptare la client
+ var w=x.wait,wb=$('waitbar');if(cf.wait!==false&&w&&!live){var el=w.ago+since,free=(w.free||3)*60000,cx=(w.cx||5)*60000;wb.style.display='block';
+  wb.className=el>=cx?'cx':el>=free?'paid':'';wb.innerHTML='⏱ aștepți '+mmss(el)+' <small>· '+(el<free?'gratuit încă '+mmss(free-el):'plătit de '+mmss(el-free))+' · '+(el<cx?'anulare cu taxă peste '+mmss(cx-el):'poți anula cu taxă')+'</small>'}else wb.style.display='none';
+ // T15 pauză
+ var pz=cf.pz!==false&&x.pause&&!live&&!ride;$('pausebox').style.display=pz?'flex':'none';if(pz){$('pzt').textContent=mmss(x.pause.ago+since);$('pzw').textContent='lucrat azi '+x.pause.w+(cf.rem?' · atinge ca să reiei tura':'')}
+ // T24 încărcare (pornit din 🔌)
+ var cg=cf.chg!==false&&chgAt>0&&!live&&!ride;if(chgAt&&now-chgAt>4*3600000){chgAt=0;save('diqChg',null)}$('chgbox').style.display=cg?'flex':'none';
+ if(cg){$('cgt').textContent=mmss(now-chgAt);$('cga').textContent=t.a+' lei';$('cgk').textContent=t.km||'–';$('cgl').textContent=x.lkwh||'–'}
+ // T11 confetti o dată pe zi
+ var dk=new Date().toDateString();if(cf.conf!==false&&t.g>=100&&goalShown!==dk&&!ride){goalShown=dk;save('diqGoal',dk);confetti('🎉 Obiectiv atins'+(x.gv&&!hideM?': '+x.gv+' lei':'')+'!')}else if(t.g>=100&&goalShown!==dk){goalShown=dk;save('diqGoal',dk)}
+ // T19 salut
+ if(!helloDone){helloDone=true;if(cf.hi!==false&&!ride&&!live){var hh=new Date().getHours(),g=hh<11?'Bună dimineața':hh<18?'Bună ziua':'Bună seara',D=new Date();
+  $('h1').textContent=g+(cf.nm?', '+cf.nm:'')+'!';$('h2').textContent=ZI[D.getDay()]+', '+D.getDate()+' '+LU[D.getMonth()]+(hideM?'':' · azi '+t.a+' lei · '+t.n+' curse')+(x.gv&&!hideM?' · obiectiv '+x.gv+' lei':'');
+  $('h3').textContent='Spor la treabă 🙂';$('hello').style.display='flex';setTimeout(function(){$('hello').style.display='none'},5000)}}
+ // T23 bandă
+ var tk=cf.tk&&!live;$('ticker').style.display=tk?'block':'none';document.body.classList.toggle('tk',!!tk);
+ if(tk){var it=[];if(t.last)it.push('🧾 ultima cursă '+t.last.p+' '+(hideM?'••':t.last.f+' lei')+' (acum '+t.last.m+' min)');if(x.tip&&x.tip!=='0,00'&&!hideM)it.push('💝 bacșiș azi '+x.tip+' lei');
+  (x.bon||[]).forEach(function(b){it.push('🏆 '+b.p+' '+b.d+'/'+b.n+' curse'+(b.d<b.n?' · mai ai '+(b.n-b.d):' ✓'))});if(x.rec&&!hideM)it.push('🥇 record '+lei(x.rec)+' lei');
+  if(x.h1!=null&&!hideM)it.push('📈 ultima oră '+x.h1+' lei');if(wx&&wx.current)it.push((WX[wx.current.weather_code]||['🌡'])[0]+' '+Math.round(wx.current.temperature_2m)+'° · '+rainTxt());
+  var txt=it.join('     •     ')||'DRIVE IQ';if($('tks').textContent!==txt)$('tks').textContent=txt}
+ // T20 telefon
+ var p=x.ph;$('phs').style.display=cf.phs!==false&&p&&!live?'block':'none';if(p)$('phs').textContent='📱 '+(p.b>=0?p.b+'%'+(p.c?' ⚡':''):'')+' · '+p.n+' · '+ago(since);
+ // T16 telecomandă / T18 / T24 / T25 butoane
+ var rb=cf.rem!==false||cf.lay!==false||cf.chg!==false||cf.qr;$('rbar').style.display=rb&&!live?'flex':'none';document.body.classList.toggle('rb',!!(rb&&!live));
+ $('rpz').style.display=cf.rem!==false&&(x.pause||x.sh)?'block':'none';if(pzState===''){$('rpz').className='';$('rpz').textContent=x.pause?'▶':'☕'}
+ $('rhide').style.display=cf.rem!==false?'block':'none';$('rhide').className=hideM?'on':'';$('rscr').style.display=cf.rem!==false?'block':'none';
+ $('rlay').style.display=cf.lay!==false&&!ride?'block':'none';$('rlay').className=layOn?'on':'';$('rchg').style.display=cf.chg!==false&&!ride?'block':'none';$('rqr').style.display=cf.qr?'block':'none';
+ // T22
+ if(x.sl)fetchSlides(x.sl);drawSlides(x.sl&&x.sl.s)}
+loadSlides();applyLayout();
+// ===== Wallpaper 2: 27 fundaluri (unele animate) + elemente mutabile =====
+var WALLS={night:0,aurora:0,sunset:0,city:0,red:0,car:0,black:0,tail:0,road:0,rain:1,bokeh:1,trails:0,synth:0,warp:1,aurora2:0,ocean:0,snow:1,moon:0,pulse:0,mount:0,glass:0,carbon:0,map:0,gauge:0,forest:0,marble:0,white:0};
+var wallKey='',wcvKind='',wcvRAF=0,wcvLast=0,wcvP=[],wallAnim=true;
+function R(a,b){return a+Math.random()*(b-a)}function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function svg(inner,ar){return '<svg viewBox="0 0 600 260" preserveAspectRatio="'+(ar||'xMidYMid slice')+'">'+inner+'</svg>'}
+function starsS(n){var s='';for(var i=0;i<n;i++)s+='<circle cx="'+R(0,600).toFixed(0)+'" cy="'+R(0,190).toFixed(0)+'" r="'+pick([.6,.9,1.2,1.6])+'" fill="#fff" opacity="'+R(.3,.9).toFixed(2)+'"'+(i%7==0?' class="sparkle" style="animation-delay:'+R(0,3).toFixed(1)+'s"':'')+'/>';return s}
+function bgHTML(w){var s='',i;
+ switch(w){
+ case 'car':return '<div class="carw"><img src="car.png" alt=""></div>';
+ case 'tail':return '<div class="carw"><div class="glow2"></div><img src="car.png" alt=""><div class="glow"></div></div>';
+ case 'city':return svg('<g fill="#0b1220">'+[[0,40,60],[45,30,90],[80,50,45],[135,35,110],[175,45,70],[225,30,130],[260,55,80],[320,35,100],[360,45,60],[410,30,120],[445,50,75],[500,35,95],[540,60,55]].map(function(b){var r='<rect x="'+b[0]+'" y="'+(260-b[2])+'" width="'+b[1]+'" height="'+b[2]+'"/>';for(var k=0;k<4;k++)r+='<rect x="'+(b[0]+5+k%2*12)+'" y="'+(268-b[2]+k*12)+'" width="5" height="5" fill="#fbbf24" opacity="'+R(.2,.8).toFixed(2)+'"/>';return r}).join('')+'</g>');
+ case 'road':s='<defs><linearGradient id="sk2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1026"/><stop offset="1" stop-color="#3b1f5c"/></linearGradient><linearGradient id="rd2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14141d"/><stop offset="1" stop-color="#262634"/></linearGradient></defs><rect width="600" height="140" fill="url(#sk2)"/>'+starsS(40)+'<rect y="140" width="600" height="120" fill="#0a0a12"/><g fill="#111827">'+[[0,40,30],[45,30,50],[80,50,22],[470,40,40],[515,30,60],[550,50,28]].map(function(b){return '<rect x="'+b[0]+'" y="'+(140-b[2])+'" width="'+b[1]+'" height="'+b[2]+'"/>'}).join('')+'</g>';
+  s+='<polygon points="286,140 314,140 640,260 -40,260" fill="url(#rd2)"/><line x1="288" y1="140" x2="-40" y2="260" stroke="#e5e7eb" stroke-width="2.5" opacity=".7"/><line x1="312" y1="140" x2="640" y2="260" stroke="#e5e7eb" stroke-width="2.5" opacity=".7"/>';
+  for(i=0;i<3;i++)s+='<line class="dash" x1="300" y1="141" x2="300" y2="262" stroke="#facc15" stroke-width="'+(2+i*2)+'" stroke-dasharray="'+[6,10,16][i]+' '+[34,40,46][i]+'" stroke-dashoffset="'+[40,50,62][i]+'" style="animation-duration:.8s;clip-path:inset('+[0,30,60][i]+'% 0 '+[70,40,0][i]+'% 0)"/>';
+  s+='<circle cx="300" cy="140" r="4" fill="#fde68a" opacity=".85"/><circle class="sparkle" cx="292" cy="146" r="2" fill="#ef4444"/><circle class="sparkle" cx="308" cy="146" r="2" fill="#ef4444" style="animation-delay:.6s"/>';return svg(s);
+ case 'rain':case 'bokeh':case 'warp':case 'snow':return '';
+ case 'trails':s='<defs><filter id="gl5"><feGaussianBlur stdDeviation="2.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="600" height="260" fill="#050510"/>';
+  [['#ef4444',170],['#f97316',185],['#fde68a',150],['#38bdf8',200],['#ffffff',135],['#ef4444',215],['#a78bfa',120]].forEach(function(p,i){s+='<path class="dash" d="M-20,'+(p[1]+40)+' C150,'+(p[1]+10)+' 380,'+(p[1]-30)+' 640,'+(p[1]-70)+'" stroke="'+p[0]+'" stroke-width="'+(2+i%3)+'" fill="none" opacity=".9" filter="url(#gl5)" stroke-dasharray="120 560" stroke-dashoffset="680" style="animation-duration:'+R(1.6,3.2).toFixed(1)+'s;animation-delay:-'+R(0,3).toFixed(1)+'s"/>'});return svg(s);
+ case 'synth':s='<defs><linearGradient id="sk6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0533"/><stop offset="1" stop-color="#6d1d6b"/></linearGradient><linearGradient id="sun6" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fde047"/><stop offset="1" stop-color="#f43f5e"/></linearGradient></defs><rect width="600" height="260" fill="url(#sk6)"/>'+starsS(30)+'<circle cx="300" cy="140" r="72" fill="url(#sun6)"/>';
+  for(i=1;i<6;i++)s+='<rect x="220" y="'+(128+i*9)+'" width="160" height="'+(2+i)+'" fill="#1a0533"/>';
+  s+='<rect y="150" width="600" height="110" fill="#0d0221"/><g stroke="#e879f9" stroke-width="1.2" opacity=".75">';for(i=-600;i<=1200;i+=60)s+='<line x1="300" y1="150" x2="'+i+'" y2="262"/>';s+='</g>';
+  for(i=0;i<7;i++)s+='<line class="hl" x1="0" y1="150" x2="600" y2="150" stroke="#e879f9" stroke-width="1.4" style="animation-delay:-'+(i*3/7).toFixed(2)+'s"/>';return svg(s);
+ case 'aurora2':return '<div style="position:absolute;inset:0;background:#020a14"></div>'+svg(starsS(60))+[['#22d3ee','10%','-10%','70%','70%',0],['#34d399','35%','5%','60%','60%',-6],['#a78bfa','55%','-5%','55%','65%',-12],['#10b981','0%','20%','60%','50%',-3]].map(function(b){return '<div class="blob" style="left:'+b[1]+';top:'+b[2]+';width:'+b[3]+';height:'+b[4]+';background:radial-gradient(ellipse,'+b[0]+'88,'+b[0]+'00 65%);animation-delay:'+b[5]+'s"></div>'}).join('')+svg('<path d="M0,230 L80,205 L150,222 L240,195 L330,218 L420,200 L520,224 L600,210 L600,260 L0,260Z" fill="#010409"/>');
+ case 'ocean':s=svg('<defs><linearGradient id="s9" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4c1d95"/><stop offset=".6" stop-color="#f97316"/><stop offset="1" stop-color="#fde68a"/></linearGradient></defs><rect width="600" height="260" fill="url(#s9)"/><circle cx="300" cy="172" r="46" fill="#fde047"/>');
+  ['#1e3a8a','#1d4ed8','#172554','#0c1a4d'].forEach(function(c,k){var y=170+k*20,d='M0,10 ';for(var x=0;x<1200;x+=150)d+='Q'+(x+37)+',0 '+(x+75)+',10 T'+(x+150)+',10 ';d+='L1200,100 L0,100Z';
+   s+='<div class="wv" style="top:'+(y/2.6)+'%;height:'+(100-y/2.6+2)+'%;animation-duration:'+(14-k*3)+'s"><svg viewBox="0 0 1200 100" preserveAspectRatio="none"><path d="'+d+'" fill="'+c+'"/></svg></div>'});
+  return s+'<div class="sparkle" style="position:absolute;left:45%;width:10%;top:73%;height:1.2%;background:#fde68a;border-radius:1vw;opacity:.7"></div>';
+ case 'moon':s=svg('<defs><radialGradient id="m11"><stop offset="0" stop-color="#fffbeb"/><stop offset="1" stop-color="#e2e8f0"/></radialGradient></defs><rect width="600" height="260" fill="#0b1426"/>'+starsS(50)+'<circle cx="430" cy="80" r="70" fill="#e0e7ff" opacity=".08"/><circle cx="430" cy="80" r="38" fill="url(#m11)"/>');
+  [[12,40,30,55],[30,60,22,80],[52,45,26,65],[70,70,18,95]].forEach(function(c){s+='<div class="cloud" style="top:'+c[0]+'%;width:'+c[1]+'vw;height:'+c[2]+'%;animation-duration:'+c[3]+'s;animation-delay:-'+R(0,c[3]).toFixed(0)+'s"></div>'});return s;
+ case 'pulse':s='<defs><filter id="g12"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><rect width="600" height="260" fill="#020617"/><g stroke="#0f2a3a" stroke-width="1">';
+  for(i=0;i<600;i+=30)s+='<line x1="'+i+'" y1="0" x2="'+i+'" y2="260"/>';for(i=0;i<260;i+=30)s+='<line x1="0" y1="'+i+'" x2="600" y2="'+i+'"/>';
+  return svg(s+'</g><polyline points="0,170 140,170 165,170 180,120 195,215 215,90 235,170 380,170 400,170 415,140 430,190 445,170 600,170" stroke="#0e3a4a" stroke-width="3" fill="none"/><polyline class="dash" points="0,170 140,170 165,170 180,120 195,215 215,90 235,170 380,170 400,170 415,140 430,190 445,170 600,170" stroke="#22d3ee" stroke-width="3" fill="none" filter="url(#g12)" stroke-dasharray="160 900" stroke-dashoffset="1060" style="animation-duration:2.6s"/>');
+ case 'mount':return svg('<defs><linearGradient id="s13" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e1b4b"/><stop offset=".55" stop-color="#db2777"/><stop offset="1" stop-color="#fb923c"/></linearGradient></defs><rect width="600" height="260" fill="url(#s13)"/><circle cx="300" cy="150" r="40" fill="#fde68a" opacity=".9"/><path d="M0,170 L90,110 L160,150 L260,80 L360,150 L450,100 L600,160 L600,260 L0,260Z" fill="#4c3a7a"/><path d="M0,200 L120,140 L210,190 L320,130 L430,195 L520,150 L600,190 L600,260 L0,260Z" fill="#2e2152"/><path d="M0,230 L100,195 L220,225 L340,190 L470,228 L600,205 L600,260 L0,260Z" fill="#160f2e"/>');
+ case 'glass':return svg('<defs><radialGradient id="a14" cx="20%" cy="20%"><stop offset="0" stop-color="#4f46e5"/><stop offset="1" stop-color="#4f46e5" stop-opacity="0"/></radialGradient><radialGradient id="b14" cx="85%" cy="85%"><stop offset="0" stop-color="#0891b2"/><stop offset="1" stop-color="#0891b2" stop-opacity="0"/></radialGradient></defs><rect width="600" height="260" fill="#050816"/><rect width="600" height="260" fill="url(#a14)"/><rect width="600" height="260" fill="url(#b14)"/><rect x="40" y="30" width="520" height="200" rx="26" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)"/>');
+ case 'carbon':return '<div style="position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.09),transparent 50%,rgba(0,0,0,.4)),repeating-conic-gradient(#1f2937 0 25%,#111827 0 50%) 0 0/1vw 1vw"></div><div style="position:absolute;left:0;right:0;bottom:8%;height:.4vw;background:#e82127"></div>';
+ case 'map':s='<rect width="600" height="260" fill="#06111f"/>';for(i=0;i<36;i++){if(Math.random()<.5){var y=R(0,260);s+='<line x1="0" y1="'+y.toFixed(0)+'" x2="600" y2="'+(y+R(-40,40)).toFixed(0)+'" stroke="#1e3a5f" stroke-width="'+pick([1,1,2,3])+'"/>'}else{var x=R(0,600);s+='<line x1="'+x.toFixed(0)+'" y1="0" x2="'+(x+R(-60,60)).toFixed(0)+'" y2="260" stroke="#1e3a5f" stroke-width="'+pick([1,1,2,3])+'"/>'}}
+  return svg(s+'<path d="M0,190 C150,150 250,230 400,180 S560,140 600,150" stroke="#0e7490" stroke-width="10" fill="none" opacity=".6"/><path d="M80,230 L200,120 L380,160 L520,60" stroke="#38bdf8" stroke-width="3" fill="none"/><circle cx="80" cy="230" r="7" fill="#22c55e"/><circle cx="520" cy="60" r="7" fill="#ef4444" class="sparkle"/>');
+ case 'gauge':s='<defs><radialGradient id="r17" cx="50%" cy="80%"><stop offset="0" stop-color="#1e293b"/><stop offset="1" stop-color="#020617"/></radialGradient></defs><rect width="600" height="260" fill="url(#r17)"/>';
+  for(i=0;i<=40;i++){var a=(150+i*6)*Math.PI/180,r1=i%5?110:100;s+='<line x1="'+(300+r1*Math.cos(a)).toFixed(1)+'" y1="'+(200+r1*Math.sin(a)).toFixed(1)+'" x2="'+(300+118*Math.cos(a)).toFixed(1)+'" y2="'+(200+118*Math.sin(a)).toFixed(1)+'" stroke="'+(i>32?'#ef4444':'#94a3b8')+'" stroke-width="'+(i%5==0?3:1.2)+'"/>'}
+  return svg(s+'<line x1="300" y1="200" x2="'+(300+95*Math.cos(250*Math.PI/180)).toFixed(1)+'" y2="'+(200+95*Math.sin(250*Math.PI/180)).toFixed(1)+'" stroke="#ef4444" stroke-width="4" stroke-linecap="round"/><circle cx="300" cy="200" r="8" fill="#e2e8f0"/>');
+ case 'forest':s='<defs><linearGradient id="s18" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#64748b"/><stop offset="1" stop-color="#94a3b8"/></linearGradient></defs><rect width="600" height="260" fill="url(#s18)"/>';
+  for(i=0;i<640;i+=38){var h=R(65,115);s+='<polygon points="'+i+','+(200-h).toFixed(0)+' '+(i-18)+',200 '+(i+18)+',200" fill="#1f3b36"/>'}s+='<rect y="120" width="600" height="140" fill="#cbd5e1" opacity=".4"/>';
+  for(i=20;i<640;i+=46){var h2=R(90,150);s+='<polygon points="'+i+','+(260-h2).toFixed(0)+' '+(i-24)+',260 '+(i+24)+',260" fill="#0f2421"/>'}return svg(s);
+ case 'marble':s='<rect width="600" height="260" fill="#0a0a0a"/>';for(i=0;i<16;i++)s+='<path d="M'+R(-50,600).toFixed(0)+','+R(0,260).toFixed(0)+' q'+R(40,120).toFixed(0)+','+R(-60,60).toFixed(0)+' '+R(100,260).toFixed(0)+','+R(-40,40).toFixed(0)+'" stroke="'+pick(['#d4af37','#a3a3a3','#d4af37'])+'" stroke-width="'+R(.5,1.8).toFixed(1)+'" fill="none" opacity="'+R(.3,.8).toFixed(2)+'"/>';return svg(s);
+ case 'white':return svg('<defs><linearGradient id="s20" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f8fafc"/><stop offset="1" stop-color="#e2e8f0"/></linearGradient></defs><rect width="600" height="260" fill="url(#s20)"/><circle cx="520" cy="40" r="120" fill="#bae6fd" opacity=".35"/><circle cx="60" cy="240" r="110" fill="#ddd6fe" opacity=".35"/>');
+ }return ''}
+// --- fundaluri pe canvas (ploaie, bokeh, hiperspațiu, ninsoare) ---
+function wcvInit(kind){var cv=$('wcv'),W=cv.width=cv.clientWidth||innerWidth,H=cv.height=cv.clientHeight||innerHeight;wcvP=[];var i;
+ if(kind==='rain'){wcvP.bk=[];for(i=0;i<24;i++)wcvP.bk.push({x:R(0,W),y:R(H*.2,H*.9),r:R(W*.02,W*.06),c:pick(['245,158,11','239,68,68','56,189,248','253,230,138','167,139,250']),a:R(.15,.35)});
+  for(i=0;i<120;i++)wcvP.push({x:R(0,W),y:R(0,H),r:R(W*.003,W*.009),v:Math.random()<.15?R(.6,2.2):0})}
+ if(kind==='bokeh')for(i=0;i<34;i++)wcvP.push({x:R(0,W),y:R(0,H),r:R(W*.015,W*.07),c:pick(['244,114,182','56,189,248','250,204,21','251,146,60','192,132,252']),a:R(.12,.4),vx:R(-.15,.15),vy:R(-.2,-.05)});
+ if(kind==='warp')for(i=0;i<160;i++)wcvP.push({a:R(0,6.283),d:R(0,1),s:R(.004,.012)});
+ if(kind==='snow')for(i=0;i<170;i++)wcvP.push({x:R(0,W),y:R(0,H),r:R(W*.0015,W*.005),v:R(.3,1.1),p:R(0,6.28)})}
+function wcvFrame(kind){var cv=$('wcv'),c=cv.getContext('2d'),W=cv.width,H=cv.height,i,p;
+ if(kind==='rain'){var g=c.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0b1220');g.addColorStop(1,'#111827');c.fillStyle=g;c.fillRect(0,0,W,H);
+  wcvP.bk.forEach(function(b){var rg=c.createRadialGradient(b.x,b.y,0,b.x,b.y,b.r);rg.addColorStop(0,'rgba('+b.c+','+b.a+')');rg.addColorStop(1,'rgba('+b.c+',0)');c.fillStyle=rg;c.fillRect(b.x-b.r,b.y-b.r,b.r*2,b.r*2)});
+  for(i=0;i<wcvP.length;i++){p=wcvP[i];if(p.v){p.y+=p.v;if(p.y>H+10){p.y=-10;p.x=R(0,W)}c.strokeStyle='rgba(255,255,255,.18)';c.lineWidth=p.r*.6;c.beginPath();c.moveTo(p.x,p.y-p.r*8);c.lineTo(p.x,p.y);c.stroke()}
+   c.fillStyle='rgba(255,255,255,.16)';c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=1;c.beginPath();c.ellipse(p.x,p.y,p.r,p.r*1.25,0,0,6.283);c.fill();c.stroke()}}
+ if(kind==='bokeh'){c.fillStyle='#0a0518';c.fillRect(0,0,W,H);for(i=0;i<wcvP.length;i++){p=wcvP[i];p.x+=p.vx;p.y+=p.vy;if(p.y<-p.r)p.y=H+p.r;if(p.x<-p.r)p.x=W+p.r;if(p.x>W+p.r)p.x=-p.r;
+  var rg2=c.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r);rg2.addColorStop(0,'rgba('+p.c+','+p.a+')');rg2.addColorStop(.7,'rgba('+p.c+','+(p.a*.6)+')');rg2.addColorStop(1,'rgba('+p.c+',0)');c.fillStyle=rg2;c.beginPath();c.arc(p.x,p.y,p.r,0,6.283);c.fill()}}
+ if(kind==='warp'){c.fillStyle='rgba(1,1,10,.55)';c.fillRect(0,0,W,H);var cx=W/2,cy=H/2,M=Math.max(W,H)*.75;for(i=0;i<wcvP.length;i++){p=wcvP[i];var d0=p.d;p.d+=p.s*(1+p.d*3);if(p.d>1){p.d=R(0,.1);d0=p.d}
+  c.strokeStyle='rgba(220,235,255,'+Math.min(1,p.d*1.6)+')';c.lineWidth=.6+p.d*2.2;c.beginPath();c.moveTo(cx+Math.cos(p.a)*d0*M,cy+Math.sin(p.a)*d0*M*.6);c.lineTo(cx+Math.cos(p.a)*p.d*M,cy+Math.sin(p.a)*p.d*M*.6);c.stroke()}}
+ if(kind==='snow'){var g2=c.createLinearGradient(0,0,0,H);g2.addColorStop(0,'#0f172a');g2.addColorStop(1,'#334155');c.fillStyle=g2;c.fillRect(0,0,W,H);
+  c.fillStyle='#e2e8f0';c.beginPath();c.moveTo(0,H*.83);c.bezierCurveTo(W*.2,H*.77,W*.37,H*.87,W*.55,H*.8);c.bezierCurveTo(W*.73,H*.74,W*.87,H*.83,W,H*.79);c.lineTo(W,H);c.lineTo(0,H);c.fill();
+  c.fillStyle='#0b1324';[[.1,.19],[.16,.13],[.78,.23],[.85,.16],[.91,.12]].forEach(function(t){c.beginPath();c.moveTo(W*t[0],H*(.83-t[1]));c.lineTo(W*t[0]-W*.024,H*.83);c.lineTo(W*t[0]+W*.024,H*.83);c.fill()});
+  c.fillStyle='rgba(255,255,255,.9)';for(i=0;i<wcvP.length;i++){p=wcvP[i];p.y+=p.v;p.p+=.02;p.x+=Math.sin(p.p)*.3;if(p.y>H+5){p.y=-5;p.x=R(0,W)}c.globalAlpha=.4+p.r/(W*.005)*.5;c.beginPath();c.arc(p.x,p.y,p.r,0,6.283);c.fill()}c.globalAlpha=1}}
+function wcvLoop(t){wcvRAF=0;if(fullMode!=='wall'||!WALLS[wcvKind])return;if(!wallAnim){return}
+ if(t-wcvLast>33){wcvLast=t;try{wcvFrame(wcvKind)}catch(e){}}wcvRAF=requestAnimationFrame(wcvLoop)}
+function wcvStart(){var cv=$('wcv');if(!WALLS[wcvKind]){cv.style.display='none';return}cv.style.display='block';
+ if(!wcvP.length||cv.width!==(cv.clientWidth||innerWidth))wcvInit(wcvKind);if(!wallAnim){try{wcvFrame(wcvKind)}catch(e){}return}if(!wcvRAF)wcvRAF=requestAnimationFrame(wcvLoop)}
+// --- elementele de peste wallpaper ---
+var WDEF='brand.1.2,clk.5.3,dat.5.2,wx.5.2',wlayKey='',wEls={};
+var WMONEY={a:1,ph:1,g:1,last:1};
+function wItem(k,s){var e=document.createElement('div');e.className='wi '+k+' s'+s;
+ if(k==='brand')e.innerHTML='<i>⚡</i>DRIVE IQ';
+ else if(k==='clk'||k==='dat'||k==='msg'){}
+ else{e.className+=' box';e.innerHTML='<span class="ic"></span><span class="tx"><b></b><small></small></span>';if(k==='wx')e.querySelector('small').className='d'}
+ if(WMONEY[k])e.classList.add('money');return e}
+function wallLayout(lay){if(lay===wlayKey)return;wlayKey=lay;wEls={};var g=$('wgrid');g.innerHTML='';var cells={};
+ for(var p=1;p<=9;p++){var c=document.createElement('div');c.className='wc';c.dataset.r=Math.ceil(p/3);c.dataset.c=(p-1)%3+1;g.appendChild(c);cells[p]=c}
+ (lay||'').split(',').forEach(function(it){var q=it.split('.');if(q.length<3)return;var k=q[0],p=+q[1]||5,s=+q[2]||2;if(!cells[p]||wEls[k])return;var e=wItem(k,s);cells[p].appendChild(e);wEls[k]=e})}
+function wSet(k,ic,b,sm){var e=wEls[k];if(!e)return;if(e.classList.contains('box')){var i=e.querySelector('.ic'),bb=e.querySelector('b'),ss=e.querySelector('small');if(i.textContent!==ic)i.textContent=ic;if(bb.textContent!==b)bb.textContent=b;if(ss.innerHTML!==sm)ss.innerHTML=sm}else if(e.textContent!==b)e.textContent=b}
+function drawWall(d,cf,t,hm,dt,ride){var w=cf.wall||'night';if(!(w in WALLS))w='night';wallAnim=cf.wa!==false;
+ var wl=$('wall');wl.classList.toggle('noanim',!wallAnim);wl.classList.toggle('lt',w==='white');document.body.classList.toggle('wg',cf.wg!==false);
+ if(w!==wallKey){wallKey=w;$('wbg').className='w-'+w;$('wbg').innerHTML=bgHTML(w);wcvKind=w;wcvP=[]}
+ if(fullMode==='wall')wcvStart();
+ var lay=cf.wl!=null?cf.wl:(cf.wx===false?'brand.1.2,clk.5.3,dat.5.2':WDEF);wallLayout(lay);
+ var x=d.x||{},hide=ride&&cf.wm!==false;
+ wSet('clk','',hm);wSet('dat','',dt);wSet('msg','',cf.wmsg||cf.msg||'');
+ for(var k in WMONEY)if(wEls[k])wEls[k].style.display=hide?'none':'';
+ wSet('a','💰',t.a+' lei','AZI');wSet('n','🚗',String(t.n),t.n==1?'CURSĂ AZI':'CURSE AZI');wSet('ph','📈',t.ph+' lei/oră','RITM AZI');
+ wSet('g','🎯',t.g<0?'–':t.g+'%',x.gv?'DIN '+x.gv+' LEI':'OBIECTIV');wSet('km','🛣',(t.km||'–')+' km','AZI, GPS');wSet('w','⏱',t.w||'–','LUCRATE AZI');
+ if(t.last)wSet('last','🧾',t.last.p+' '+t.last.f,'ULTIMA · ACUM '+t.last.m+' MIN');else wSet('last','🧾','–','ULTIMA CURSĂ');
+ if(wEls.wx){if(wx&&wx.current){var c=wx.current,wc=WX[c.weather_code]||['🌡',''],txt=wc[1];try{txt+=' · '+Math.round(wx.daily.temperature_2m_min[0])+'° / '+Math.round(wx.daily.temperature_2m_max[0])+'°'}catch(e){}
+  wSet('wx',wc[0],Math.round(c.temperature_2m)+'°',txt+'<br>'+rainTxt());wEls.wx.style.display=''}else wEls.wx.style.display='none'}}
+// --- previzualizare în telefon (aceeași pagină, fără releu) ---
+var PREVIEW=/preview/.test(location.search+location.hash);
+window.diqPreview=function(js){try{cur=typeof js==='string'?JSON.parse(js):js;curRecv=Date.now();helloDone=true;draw()}catch(e){}};
 $('go').onclick=function(){start($('code').value)};$('code').onkeydown=function(e){if(e.key==='Enter')start($('code').value)};
 $('chg').onclick=function(){save('diq',null);if(es)es.close();code=null;cur=null;showPair('')};
 setInterval(draw,1000);setInterval(function(){if(topic)poll()},30000);
-start(decodeURIComponent(location.hash.slice(1))||load('diq')||'');
+if(PREVIEW){document.body.classList.add('pv');$('pair').style.display='none';$('wrap').style.display='flex'}else start(decodeURIComponent(location.hash.slice(1))||load('diq')||'');
 </script></body></html>
