@@ -14,7 +14,7 @@ html,body{margin:0;height:100%;background:#020617;color:#fff;font-family:Arial,s
 #pair input{font-size:5vw;width:60vw;text-align:center;padding:1vw;border-radius:1.5vw;border:3px solid #334155;background:#0f172a;color:#5eead4;letter-spacing:.4vw}
 #pair button{font-size:3.4vw;padding:1.2vw 5vw;border-radius:1.5vw;border:0;background:#e82127;color:#fff;font-weight:bold}
 #mapbox{display:none;flex:2;border-radius:3vw;overflow:hidden;position:relative;background:#0f172a}#map{position:absolute;inset:0}.leaflet-container{background:#1e293b!important}#minfo{white-space:nowrap;position:absolute;left:1vw;bottom:1vw;z-index:500;background:rgba(2,6,23,.8);border-radius:1vw;padding:.5vw 1vw;font-size:1.8vw;font-weight:bold}
-#offer .row span{white-space:nowrap}.withmap #offer .v{font-size:11vw}.withmap #offer .row{font-size:2.5vw;gap:2vw}.withmap #offer{flex:1.8}
+#offer .row span{white-space:nowrap}.withmap #offer .v{font-size:11vw}.withmap #offer .row{font-size:min(2vw,4vh);gap:1.4vw;flex-wrap:wrap;justify-content:center}.withmap #offer{flex:1.8}
 #ridebox{display:none;flex:1;border-radius:3vw;background:#020617;flex-direction:column;align-items:center;justify-content:center;text-align:center}#rclk{font-size:20vw;font-weight:900;line-height:1}#rdat{color:#94a3b8;font-size:3vw;margin-top:1vw}#rmsg{font-size:6vw;font-weight:bold;padding:0 4vw}
 #wrap{flex-wrap:wrap;align-content:stretch}.t{flex:1 1 26%;min-height:30%}
 #full{display:none;position:fixed;inset:0;z-index:900;background:#000;align-items:center;justify-content:center}#full video{width:100%;height:100%;object-fit:contain;display:none}
@@ -112,6 +112,24 @@ body.rb #wgrid{padding-top:5.2vw}
 .sparkle{animation:breathe 2.4s ease-in-out infinite alternate}
 
 body.pv #pausebox,body.pv #chgbox,body.pv #waitbar,body.pv #cashbox,body.pv #bonbar,body.pv #hello,body.pv #rbar,body.pv #phs,body.pv #err,body.pv #chg,body.pv #bclip,body.pv #ticker,body.pv #qrbox,body.pv #laybar,body.pv #toast,body.pv #conftxt,body.pv #confetti{display:none!important}
+
+#wbg{--pd:3.6s;--pi:.7}
+.tl{--a:calc(1 - var(--pi)*.85);--b:1}.tlg{--a:max(.04,calc(1 - var(--pi)*1.3));--b:1}
+#wbg .phd{--a:var(--pi);--b:0;opacity:0}#wbg .phg{--a:0;--b:calc(var(--pi)*.8);opacity:0;mix-blend-mode:screen}
+.tl,.tlg,#wbg .phd,#wbg .phg{animation:pl_lin var(--pd) ease-in-out infinite alternate}
+#wbg.pm-resp .tl,#wbg.pm-resp .tlg,#wbg.pm-resp .phd,#wbg.pm-resp .phg{animation:pl_resp calc(var(--pd)*2) ease-in-out infinite}
+#wbg.pm-dbl .tl,#wbg.pm-dbl .tlg,#wbg.pm-dbl .phd,#wbg.pm-dbl .phg{animation:pl_dbl calc(var(--pd)*2) ease-in-out infinite}
+#wbg.pm-fr .tl,#wbg.pm-fr .tlg,#wbg.pm-fr .phd,#wbg.pm-fr .phg{animation:pl_fr calc(var(--pd)*2) ease-out infinite}
+@keyframes pl_lin{from{opacity:var(--a)}to{opacity:var(--b)}}
+@keyframes pl_resp{0%,100%{opacity:var(--a)}42%,62%{opacity:var(--b)}}
+@keyframes pl_dbl{0%{opacity:var(--a)}7%{opacity:var(--b)}15%{opacity:var(--a)}23%{opacity:var(--b)}36%,100%{opacity:var(--a)}}
+@keyframes pl_fr{0%{opacity:var(--a)}5%,50%{opacity:var(--b)}100%{opacity:var(--a)}}
+#wbg.pi0 .tl,#wbg.pi0 .tlg{animation:none;opacity:1}#wbg.pi0 .phd,#wbg.pi0 .phg{animation:none;opacity:0}
+#wbg[class*=w-ph]{background:#000}#wbg .phb{position:absolute;inset:0}#wbg .phl{position:absolute;inset:0;background-repeat:no-repeat;background-size:cover}
+#wbg .phb.p4{left:50%;right:auto;height:100%;aspect-ratio:1080/1358;transform:translateX(-50%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent);mask-image:linear-gradient(90deg,transparent,#000 13%,#000 87%,transparent)}#wbg .p4 .phl{background-size:100% 100%}
+#wbg .glow{animation:breathe2 3.6s ease-in-out infinite alternate}#wbg .glow.soft{opacity:.5;animation-duration:4.4s}
+@keyframes breathe2{0%{opacity:.15;filter:brightness(.8)}100%{opacity:1;filter:brightness(1.35)}}
+#wbg .carw img{animation:carlit 3.6s ease-in-out infinite alternate}@keyframes carlit{from{filter:drop-shadow(0 0 1.2vw rgba(255,30,40,.25)) brightness(.92)}to{filter:drop-shadow(0 0 2.6vw rgba(255,30,40,.75)) brightness(1.12)}}
 </style></head><body>
 <div id="pair"><h1>DRIVE IQ · ecran mașină</h1><p>Scrie codul din telefon: DRIVE IQ → 🚘 Tesla → „Prin internet”</p>
 <input id="code" placeholder="xxxx-xxxx-xxxx" autocomplete="off" autocapitalize="off" spellcheck="false"><button id="go">Conectează</button><p id="perr"></p></div>
@@ -166,7 +184,7 @@ async function start(c){
  key=await crypto.subtle.importKey('raw',await sha('k:'+c),{name:'AES-GCM'},false,['decrypt','encrypt']);
  $('pair').style.display='none';$('wrap').style.display='flex';$("chg").style.display="block";$('err').style.display='block';
  if(location.hash)history.replaceState(null,'',location.pathname);
- await poll();listen();
+ await poll();listen();mqStart();
 }
 async function dec(b64){var raw=Uint8Array.from(atob(b64.trim()),function(ch){return ch.charCodeAt(0)});
  var pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:raw.slice(0,12)},key,raw.slice(12));return JSON.parse(new TextDecoder().decode(pt))}
@@ -174,11 +192,21 @@ async function inflate(b64){var raw=Uint8Array.from(atob(b64),function(ch){retur
  var st=new Blob([raw]).stream().pipeThrough(new DecompressionStream('deflate-raw'));return JSON.parse(await new Response(st).text())}
 async function take(m,live){if(!m||m.event!=='message'||m.id===lastId)return;
  try{var body=m.message;if(m.attachment&&m.attachment.url){body=await (await fetch(m.attachment.url,{cache:'no-store'})).text()}
-  var d=await dec(body);if(d&&d.z)d=await inflate(d.z);lastId=m.id;var at=live?Date.now():m.time*1000;if(at<lastMsgAt)return;lastMsgAt=at;cur=d;curRecv=at;draw()}catch(e){$('err').textContent=(typeof DecompressionStream==='undefined'?'DRIVE IQ · browserul mașinii e prea vechi pentru mesajele mari – actualizează software-ul mașinii':'DRIVE IQ · mesaj necitibil – verifică codul (schimbă codul, jos în dreapta)')}}
+  var d=await dec(body);if(d&&d.z)d=await inflate(d.z);lastId=m.id;var at=d.at?Math.min(d.at,Date.now()):(live?Date.now():m.time*1000);if(at<=lastMsgAt)return;lastMsgAt=at;cur=d;curRecv=at;draw()}catch(e){$('err').textContent=(typeof DecompressionStream==='undefined'?'DRIVE IQ · browserul mașinii e prea vechi pentru mesajele mari – actualizează software-ul mașinii':'DRIVE IQ · mesaj necitibil – verifică codul (schimbă codul, jos în dreapta)')}}
+
+// ---- legătura fără limită (MQTT prin websocket), pe lângă ntfy ----
+var MQ=(new URLSearchParams(location.search).get('mq')||'wss://broker.emqx.io:8084/mqtt,wss://broker.hivemq.com:8884/mqtt').split(','),mqC=[];
+function mqUp(){return mqC.some(function(c){return c.connected})}
+function mqStart(){if(PREVIEW)return;var go=function(){if(!window.mqtt)return;mqC.forEach(function(c){try{c.end(true)}catch(e){}});mqC=[];
+ MQ.forEach(function(u){try{var cl=mqtt.connect(u,{clientId:'diqp'+Math.random().toString(36).slice(2,10),clean:true,reconnectPeriod:5000,connectTimeout:10000,keepalive:60});
+  cl.on('connect',function(){cl.subscribe('diq/'+topic)});cl.on('message',function(t,p){if(t==='diq/'+topic)takeMq(p.toString())});cl.on('error',function(){});mqC.push(cl)}catch(e){}})};
+ if(window.mqtt)go();else{var sc=document.createElement('script');sc.src='https://unpkg.com/mqtt@5.10.1/dist/mqtt.min.js';sc.onload=go;document.head.appendChild(sc)}}
+async function takeMq(b64){try{var d=await dec(b64);if(d&&d.z)d=await inflate(d.z);var at=Math.min(d.at||Date.now(),Date.now());if(at<=lastMsgAt)return;lastMsgAt=at;cur=d;curRecv=at;draw()}catch(e){}}
+function mqPub(sub,b64){mqC.forEach(function(c){try{if(c.connected)c.publish('diq/'+topic+sub,b64)}catch(e){}})}
 async function poll(){try{var r=await fetch(RELAY+topic+'/json?poll=1&since=12h',{cache:'no-store'});var tx=await r.text();
  var ls=tx.trim().split('\n').filter(Boolean);if(ls.length)await take(JSON.parse(ls[ls.length-1]),false);else if(!cur)$('err').textContent='DRIVE IQ · conectat la releu · aștept prima ofertă / cursă din telefon'}catch(e){}}
 function listen(){if(es)es.close();es=new EventSource(RELAY+topic+'/sse');es.onmessage=function(ev){try{take(JSON.parse(ev.data),true)}catch(e){}};
- es.onerror=function(){$('err').textContent='DRIVE IQ · fără internet în mașină – reîncerc…'}}
+ es.onerror=function(){if(mqUp())return;$('err').textContent='DRIVE IQ · fără internet în mașină – reîncerc…'}}
 var lmap=null,layer=null,mapKey='',geoC={};
 function geo(q){if(geoC[q])return Promise.resolve(geoC[q]);
  return fetch('https://photon.komoot.io/api/?limit=1&lat=44.43&lon=26.10&q='+encodeURIComponent(q.replace(/Bucharest/ig,'București'))).then(function(r){return r.json()}).then(function(j){var f=j.features&&j.features[0];if(!f)throw 0;var c=[f.geometry.coordinates[1],f.geometry.coordinates[0]];geoC[q]=c;return c})}
@@ -198,7 +226,7 @@ function shortAddr(a){return(a||'').replace(/,?\s*(Bucure[șşs]ti|Bucharest|Rom
 async function sendBon(id){var iv=crypto.getRandomValues(new Uint8Array(12));
  var ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,enc.encode(JSON.stringify({cmd:'bon',id:id,at:Date.now()}))));
  var all=new Uint8Array(12+ct.length);all.set(iv,0);all.set(ct,12);var b64=btoa(String.fromCharCode.apply(null,all));
- return fetch(RELAY+topic+'c',{method:'POST',body:b64})}
+ mqPub('c',b64);return fetch(RELAY+topic+'c',{method:'POST',body:b64}).catch(function(){})}
 $('bonbar').onclick=function(){var b=$('bonbar');
  if(bonState==='ready'){bonState='confirm';b.className='confirm';b.textContent='Atinge din nou ca să scoți bonul';clearTimeout(bonTimer);bonTimer=setTimeout(function(){if(bonState==='confirm'){bonState='ready';draw()}},5000);return}
  if(bonState==='confirm'){bonState='sent';clearTimeout(bonTimer);b.className='sent';b.textContent='Se trimite la telefon…';
@@ -222,8 +250,8 @@ function draw(){if(!cur)return;var d=cur,t=d.t,now=Date.now(),cf=d.cfg||{a:1,ph:
  $('clk').textContent=hm;$('dat').textContent=dt;
 $('rclk').textContent=hm;$('rdat').textContent=dt;
  $('a').textContent=t.a;$('n').textContent=t.n+' curse';$('ph').textContent=t.ph;$('w').textContent=t.w+' lucrate';$('g').textContent=t.g<0?'–':t.g+'%';
- var ride=!!d.ride&&cf.ride&&cf.ride!=='normal';
- var o=d.o,box=$('offer'),age=(d.oa||0)+(now-curRecv),live=o&&age<45000;
+ var fix=wfix(cf),ride=!fix&&!!d.ride&&cf.ride&&cf.ride!=='normal';
+ var o=d.o,box=$('offer'),age=(d.oa||0)+(now-curRecv),live=o&&age<Math.max(20000,((o&&o.ttl)||15)*1000+6000)&&!(fix&&cf.wfo===false);
  if(live){box.style.display='flex';box.className=o.k;$('op').textContent=o.p.toUpperCase()+(o.pay=='CASH'&&(!ride||cf.rs)?' · 💵 CASH':'');$('okm').textContent=o.km;
   var sums=!ride||cf.rs;$('oh').textContent=sums&&o.h?o.h+' lei/oră':'';$('od').textContent=o.d+' km';$('of').textContent=sums?o.f+' lei':'';
   show('tph',0);show('tg',0);show('tc',0);show('ridebox',0);show('ta',!ride&&cf.a);if(cf.map!==false)showMap(o.a1,o.a2);else showMap(null,null)}
@@ -279,7 +307,7 @@ function rainTxt(){try{var t=wx.hourly.time,pp=wx.hourly.precipitation_probabili
 function KCOL(k){return k==='gold'?'#eab308':k==='green'?'#22c55e':k==='orange'?'#f97316':'#ef4444'}
 async function sendCmd(c){var iv=crypto.getRandomValues(new Uint8Array(12));
  var ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,enc.encode(JSON.stringify({cmd:c,id:Date.now(),at:Date.now()}))));
- var all=new Uint8Array(12+ct.length);all.set(iv,0);all.set(ct,12);return fetch(RELAY+topic+'c',{method:'POST',body:btoa(String.fromCharCode.apply(null,all))})}
+ var all=new Uint8Array(12+ct.length);all.set(iv,0);all.set(ct,12);var b64=btoa(String.fromCharCode.apply(null,all));mqPub('c',b64);return fetch(RELAY+topic+'c',{method:'POST',body:b64}).catch(function(){})}
 // --- căsuțele noi ---
 function tilesX(d,cf,t,live,ride){var x=d.x||{},idle=!live&&!ride;
  // T4 inel
@@ -364,20 +392,22 @@ function confetti(txt){var cv=$('confetti'),c=cv.getContext('2d'),W=cv.width=inn
  for(var i=0;i<180;i++)P.push({x:Math.random()*W,y:-Math.random()*H*.6,vx:(Math.random()-.5)*4,vy:2+Math.random()*4,r:4+Math.random()*7,a:Math.random()*6,c:['#22c55e','#eab308','#38bdf8','#f472b6','#a78bfa','#fff'][i%6]});
  (function f(){c.clearRect(0,0,W,H);P.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.a+=.15;c.save();c.translate(p.x,p.y);c.rotate(p.a);c.fillStyle=p.c;c.fillRect(-p.r/2,-p.r/4,p.r,p.r/2);c.restore()});
   if(Date.now()-t0<6000)requestAnimationFrame(f);else{cv.style.display='none';$('conftxt').style.display='none'}})()}
+// 📌 wallpaper permanent: wallpaperul ales rămâne mereu (fără ecran de cursă / pauză / așteptare / încărcare)
+function wfix(cf){return !!(cf&&cf.wfix&&cf.idle==='wall')}
 // --- desen ---
-function drawX(d,cf,t,live,ride,o,age){var x=d.x||{},now=Date.now(),since=now-curRecv;
+function drawX(d,cf,t,live,ride,o,age){var x=d.x||{},now=Date.now(),since=now-curRecv,fix=wfix(cf);
  // T1 semafor + T2 numărătoare
  $('offer').classList.toggle('semfull',!!(live&&cf.sem));if(live&&cf.sem)$('mapbox').style.display='none';
  var ttl=((o&&o.ttl)||15)*1000;if(live&&cf.cd!==false&&age<ttl+1500){$('cd').style.display='block';var r=Math.max(0,1-age/ttl);$('cdi').style.width=(r*100).toFixed(1)+'%';$('cd').classList.toggle('low',r<.3)}else $('cd').style.display='none';
  // vremea pentru căsuță / bandă / temă automată
  if(wxNeed(cf))loadWx(cf.loc||null);
  // T8 așteptare la client
- var w=x.wait,wb=$('waitbar');if(cf.wait!==false&&w&&!live){var el=w.ago+since,free=(w.free||3)*60000,cx=(w.cx||5)*60000;wb.style.display='block';
+ var w=x.wait,wb=$('waitbar');if(cf.wait!==false&&w&&!live&&!fix){var el=w.ago+since,free=(w.free||3)*60000,cx=(w.cx||5)*60000;wb.style.display='block';
   wb.className=el>=cx?'cx':el>=free?'paid':'';wb.innerHTML='⏱ aștepți '+mmss(el)+' <small>· '+(el<free?'gratuit încă '+mmss(free-el):'plătit de '+mmss(el-free))+' · '+(el<cx?'anulare cu taxă peste '+mmss(cx-el):'poți anula cu taxă')+'</small>'}else wb.style.display='none';
  // T15 pauză
- var pz=cf.pz!==false&&x.pause&&!live&&!ride;$('pausebox').style.display=pz?'flex':'none';if(pz){$('pzt').textContent=mmss(x.pause.ago+since);$('pzw').textContent='lucrat azi '+x.pause.w+(cf.rem?' · atinge ca să reiei tura':'')}
+ var pz=cf.pz!==false&&x.pause&&!live&&!ride&&!fix;$('pausebox').style.display=pz?'flex':'none';if(pz){$('pzt').textContent=mmss(x.pause.ago+since);$('pzw').textContent='lucrat azi '+x.pause.w+(cf.rem?' · atinge ca să reiei tura':'')}
  // T24 încărcare (pornit din 🔌)
- var cg=cf.chg!==false&&chgAt>0&&!live&&!ride;if(chgAt&&now-chgAt>4*3600000){chgAt=0;save('diqChg',null)}$('chgbox').style.display=cg?'flex':'none';
+ var cg=cf.chg!==false&&chgAt>0&&!live&&!ride&&!fix;if(chgAt&&now-chgAt>4*3600000){chgAt=0;save('diqChg',null)}$('chgbox').style.display=cg?'flex':'none';
  if(cg){$('cgt').textContent=mmss(now-chgAt);$('cga').textContent=t.a+' lei';$('cgk').textContent=t.km||'–';$('cgl').textContent=x.lkwh||'–'}
  // T11 confetti o dată pe zi
  var dk=new Date().toDateString();if(cf.conf!==false&&t.g>=100&&goalShown!==dk&&!ride){goalShown=dk;save('diqGoal',dk);confetti('🎉 Obiectiv atins'+(x.gv&&!hideM?': '+x.gv+' lei':'')+'!')}else if(t.g>=100&&goalShown!==dk){goalShown=dk;save('diqGoal',dk)}
@@ -395,21 +425,178 @@ function drawX(d,cf,t,live,ride,o,age){var x=d.x||{},now=Date.now(),since=now-cu
  var p=x.ph;$('phs').style.display=cf.phs!==false&&p&&!live?'block':'none';if(p)$('phs').textContent='📱 '+(p.b>=0?p.b+'%'+(p.c?' ⚡':''):'')+' · '+p.n+' · '+ago(since);
  // T16 telecomandă / T18 / T24 / T25 butoane
  var rb=cf.rem!==false||cf.lay!==false||cf.chg!==false||cf.qr;$('rbar').style.display=rb&&!live?'flex':'none';document.body.classList.toggle('rb',!!(rb&&!live));
- $('rpz').style.display=cf.rem!==false&&(x.pause||x.sh)?'block':'none';if(pzState===''){$('rpz').className='';$('rpz').textContent=x.pause?'▶':'☕'}
+ $('rpz').style.display=cf.rem!==false&&!fix&&(x.pause||x.sh)?'block':'none';if(pzState===''){$('rpz').className='';$('rpz').textContent=x.pause?'▶':'☕'}
  $('rhide').style.display=cf.rem!==false?'block':'none';$('rhide').className=hideM?'on':'';$('rscr').style.display=cf.rem!==false?'block':'none';
  $('rlay').style.display=cf.lay!==false&&!ride?'block':'none';$('rlay').className=layOn?'on':'';$('rchg').style.display=cf.chg!==false&&!ride?'block':'none';$('rqr').style.display=cf.qr?'block':'none';
  // T22
  if(x.sl)fetchSlides(x.sl);drawSlides(x.sl&&x.sl.s)}
 loadSlides();applyLayout();
 // ===== Wallpaper 2: 27 fundaluri (unele animate) + elemente mutabile =====
-var WALLS={night:0,aurora:0,sunset:0,city:0,red:0,car:0,black:0,tail:0,road:0,rain:1,bokeh:1,trails:0,synth:0,warp:1,aurora2:0,ocean:0,snow:1,moon:0,pulse:0,mount:0,glass:0,carbon:0,map:0,gauge:0,forest:0,marble:0,white:0};
+var WALLS={night:0,aurora:0,sunset:0,city:0,red:0,car:0,black:0,tail:0,road:0,rain:1,bokeh:1,trails:0,synth:0,warp:1,aurora2:0,ocean:0,snow:1,moon:0,pulse:0,mount:0,glass:0,carbon:0,map:0,gauge:0,forest:0,marble:0,white:0,fut1:0,fut2:0,fut3:0,fut4:0,fut5:0,fut6:0,real1:0,real2:0,real3:0,real4:0,ev1:0,ev2:0,ev3:0,ph1:0,ph2:0,ph3:0,ph4:0};
 var wallKey='',wcvKind='',wcvRAF=0,wcvLast=0,wcvP=[],wallAnim=true;
 function R(a,b){return a+Math.random()*(b-a)}function pick(a){return a[Math.floor(Math.random()*a.length)]}
 function svg(inner,ar){return '<svg viewBox="0 0 600 260" preserveAspectRatio="'+(ar||'xMidYMid slice')+'">'+inner+'</svg>'}
 function starsS(n){var s='';for(var i=0;i<n;i++)s+='<circle cx="'+R(0,600).toFixed(0)+'" cy="'+R(0,190).toFixed(0)+'" r="'+pick([.6,.9,1.2,1.6])+'" fill="#fff" opacity="'+R(.3,.9).toFixed(2)+'"'+(i%7==0?' class="sparkle" style="animation-delay:'+R(0,3).toFixed(1)+'s"':'')+'/>';return s}
-function bgHTML(w){var s='',i;
+// --- W21–W26: mașini futuriste desenate de noi, cu stopuri care pulsează ușor ---
+function futDefs(c1,c2){return '<defs><filter id="fg" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="5"/></filter><filter id="fg2" x="-50%" y="-200%" width="200%" height="500%"><feGaussianBlur stdDeviation="14"/></filter>'+
+ '<linearGradient id="fb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+c1+'"/><stop offset="1" stop-color="'+c2+'"/></linearGradient>'+
+ '<linearGradient id="fsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04040a"/><stop offset=".7" stop-color="#0b0b18"/><stop offset="1" stop-color="#140810"/></linearGradient>'+
+ '<linearGradient id="frf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff2433" stop-opacity=".55"/><stop offset="1" stop-color="#ff2433" stop-opacity="0"/></linearGradient></defs>'}
+function futBase(){return '<rect width="600" height="260" fill="url(#fsky)"/><rect y="222" width="600" height="38" fill="#07070c"/><line x1="0" y1="222" x2="600" y2="222" stroke="#1b1b2a" stroke-width="1"/>'}
+function lightBar(x,y,w,h,col){col=col||'#ff2433';return '<g class="tlg"><rect x="'+(x-10)+'" y="'+(y-8)+'" width="'+(w+20)+'" height="'+(h+16)+'" rx="'+(h+8)+'" fill="'+col+'" filter="url(#fg2)"/></g>'+
+ '<g class="tl"><rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(h/2)+'" fill="'+col+'" filter="url(#fg)"/><rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="'+(h/2)+'" fill="'+col+'"/><rect x="'+(x+4)+'" y="'+(y+h*0.3)+'" width="'+(w-8)+'" height="'+Math.max(1,h*0.25)+'" rx="1" fill="#ffd0d0" opacity=".8"/></g>'}
+function reflect(x,w,col){col=col||'#ff2433';return '<g class="tlg"><ellipse cx="'+(x+w/2)+'" cy="232" rx="'+(w/2)+'" ry="7" fill="'+col+'" opacity=".45" filter="url(#fg2)"/><rect x="'+(x+20)+'" y="227" width="'+(w-40)+'" height="2" rx="1" fill="'+col+'" opacity=".5" filter="url(#fg)"/></g>'}
+function futHTML(w){var s='';
+ if(w==='fut1'){s=futDefs('#2c2e40','#07070c')+futBase()+
+  '<path d="M118,206 L136,156 Q168,120 232,113 L368,113 Q432,120 464,156 L482,206 Z" fill="url(#fb)" stroke="#565a7a" stroke-width="1.4"/>'+
+  '<path d="M178,150 Q204,125 244,121 L356,121 Q396,125 422,150 Z" fill="#0a0e1a" stroke="#1d2436"/><path d="M200,146 Q220,130 250,127 L300,127 L280,146 Z" fill="#7dd3fc" opacity=".06"/>'+
+  '<rect x="116" y="198" width="368" height="24" rx="10" fill="#08080d"/><rect x="138" y="214" width="40" height="16" rx="4" fill="#020203"/><rect x="422" y="214" width="40" height="16" rx="4" fill="#020203"/>'+
+  lightBar(128,163,344,6)+'<g class="tl"><rect x="124" y="158" width="10" height="20" rx="3" fill="#ff2433"/><rect x="466" y="158" width="10" height="20" rx="3" fill="#ff2433"/></g>'+reflect(128,344)}
+ if(w==='fut2'){s=futDefs('#3a3f48','#0f1115')+futBase()+
+  '<path d="M106,208 L126,146 L300,92 L474,146 L494,208 Z" fill="url(#fb)" stroke="#55606e" stroke-width="1.2"/>'+
+  '<path d="M152,140 L300,100 L448,140 Z" fill="#0b0d12" stroke="#2a3038"/><line x1="140" y1="186" x2="460" y2="186" stroke="#252a31" stroke-width="2"/>'+
+  '<rect x="104" y="200" width="392" height="22" rx="3" fill="#0b0c0f"/>'+lightBar(132,150,336,4)+reflect(132,336)}
+ if(w==='fut3'){s=futDefs('#33244f','#08060e')+futBase()+
+  '<path d="M126,208 C138,160 190,128 262,122 L338,122 C410,128 462,160 474,208 Z" fill="url(#fb)" stroke="#6b55a0" stroke-width="1.4"/>'+
+  '<path d="M196,150 C214,134 240,128 270,127 L330,127 C360,128 386,134 404,150 Z" fill="#0b0814"/>'+
+  '<rect x="124" y="200" width="352" height="22" rx="11" fill="#07060a"/>'+
+  '<g class="tlg"><path d="M150,160 q-24,6 -24,18 q0,12 24,18 M450,160 q24,6 24,18 q0,12 -24,18" stroke="#ff2433" stroke-width="14" fill="none" filter="url(#fg2)"/></g>'+
+  '<g class="tl"><path d="M168,162 q-26,4 -26,16 q0,12 26,16" stroke="#ff2433" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M432,162 q26,4 26,16 q0,12 -26,16" stroke="#ff2433" stroke-width="5" fill="none" stroke-linecap="round"/>'+
+  '<line x1="176" y1="178" x2="424" y2="178" stroke="#ff2433" stroke-width="2" opacity=".55"/></g>'+reflect(140,320)}
+ if(w==='fut4'){s=futDefs('#282a38','#06060a')+'<rect width="600" height="260" fill="url(#fsky)"/><rect y="222" width="600" height="38" fill="#0b0b12"/>'+
+  '<path d="M138,206 L154,160 Q182,128 238,122 L362,122 Q418,128 446,160 L462,206 Z" fill="url(#fb)" stroke="#4f5370" stroke-width="1.4"/>'+
+  '<path d="M192,154 Q214,132 248,129 L352,129 Q386,132 408,154 Z" fill="#090c16"/><rect x="136" y="198" width="328" height="24" rx="10" fill="#07070b"/>'+
+  lightBar(146,167,308,6)+
+  '<g class="tlg"><rect x="150" y="226" width="300" height="6" fill="#ff2433" opacity=".35" filter="url(#fg)"/><rect x="170" y="236" width="260" height="4" fill="#ff2433" opacity=".25" filter="url(#fg)"/><rect x="190" y="245" width="220" height="3" fill="#ff2433" opacity=".18" filter="url(#fg)"/></g>';
+  for(var i=0;i<70;i++){var x=R(0,600),y=R(0,220);s+='<line x1="'+x.toFixed(0)+'" y1="'+y.toFixed(0)+'" x2="'+(x-3).toFixed(0)+'" y2="'+(y+R(10,22)).toFixed(0)+'" stroke="#9fb4d8" stroke-width=".8" opacity="'+R(.15,.4).toFixed(2)+'"/>'}}
+ if(w==='fut5'){s=futDefs('#2e3038','#060607')+futBase()+
+  '<path d="M84,212 C104,178 166,154 248,148 L352,148 C434,154 496,178 516,212 Z" fill="url(#fb)" stroke="#5c5f70" stroke-width="1.4"/>'+
+  '<rect x="140" y="132" width="320" height="7" rx="3" fill="#121318" stroke="#2c2e38"/><rect x="170" y="139" width="6" height="14" fill="#121318"/><rect x="424" y="139" width="6" height="14" fill="#121318"/>'+
+  '<path d="M230,160 Q260,152 300,151 Q340,152 370,160 Z" fill="#0a0b10"/>'+
+  '<g class="tlg"><path d="M120,182 L178,172 M422,172 L480,182" stroke="#ff2433" stroke-width="18" filter="url(#fg2)"/><rect x="250" y="200" width="100" height="12" fill="#ff2433" filter="url(#fg2)" opacity=".7"/></g>'+
+  '<g class="tl"><path d="M118,184 L180,170 L176,178 L124,190 Z" fill="#ff2433"/><path d="M482,184 L420,170 L424,178 L476,190 Z" fill="#ff2433"/><rect x="286" y="168" width="28" height="4" rx="2" fill="#ff2433"/></g>'+
+  '<g fill="#0a0a0e" stroke="#202230">'+[230,250,270,290,310,330,350,370].map(function(x){return '<rect x="'+x+'" y="200" width="4" height="18"/>'}).join('')+'</g>'+reflect(120,360)}
+ if(w==='fut6'){s=futDefs('#24304e','#06070e')+futBase()+
+  '<path d="M126,208 C138,162 186,130 258,124 L342,124 C414,130 462,162 474,208 Z" fill="url(#fb)" stroke="#4b5f95" stroke-width="1.4"/>'+
+  '<path d="M196,152 C214,136 240,130 270,129 L330,129 C360,130 386,136 404,152 Z" fill="#090c18"/><rect x="124" y="200" width="352" height="22" rx="11" fill="#06070c"/>'+
+  lightBar(150,170,120,5,'#d946ef')+lightBar(330,170,120,5,'#d946ef')+'<g class="tl"><rect x="286" y="168" width="28" height="9" rx="3" fill="#38bdf8"/></g>'+reflect(150,300,'#d946ef')}
+ return svg(s)}
+
+// --- W27–W30: mașini realiste (vedere din spate), stopuri care pulsează lin – desen propriu, fără mărci ---
+function rDefs(p1,p2){return '<defs><filter id="rg" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation="6"/></filter><filter id="rg2" x="-60%" y="-300%" width="220%" height="700%"><feGaussianBlur stdDeviation="16"/></filter>'+
+ '<linearGradient id="rp" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+p1+'"/><stop offset=".45" stop-color="'+p2+'"/><stop offset=".55" stop-color="'+p1+'"/><stop offset="1" stop-color="#050506"/></linearGradient>'+
+ '<linearGradient id="rw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2433"/><stop offset="1" stop-color="#05070b"/></linearGradient>'+
+ '<linearGradient id="rl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7a7a"/><stop offset=".45" stop-color="#ff1f2e"/><stop offset="1" stop-color="#8a000c"/></linearGradient>'+
+ '<linearGradient id="rs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#03030a"/><stop offset=".75" stop-color="#0d0c1c"/><stop offset="1" stop-color="#1a0b14"/></linearGradient>'+
+ '<radialGradient id="rch"><stop offset="0" stop-color="#050505"/><stop offset=".6" stop-color="#2a2a2e"/><stop offset="1" stop-color="#9aa0aa"/></radialGradient></defs>'+
+ '<rect width="600" height="260" fill="url(#rs)"/><rect y="226" width="600" height="34" fill="#060609"/><ellipse cx="300" cy="230" rx="240" ry="9" fill="#000" opacity=".8"/>'}
+function lamp(d){return '<g class="tlg"><path d="'+d+'" fill="#ff1f2e" filter="url(#rg2)"/></g><g class="tl"><path d="'+d+'" fill="url(#rl)"/><path d="'+d+'" fill="none" stroke="#ffb3b3" stroke-width=".8" opacity=".7"/></g>'}
+function glowRefl(cx,w){return '<g class="tlg"><ellipse cx="'+cx+'" cy="236" rx="'+w+'" ry="6" fill="#ff1f2e" opacity=".35" filter="url(#rg)"/></g>'}
+function mirX(d){return d.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g,function(m,x,y){return (600-parseFloat(x))+','+y})}
+function realHTML(w){var s='',L;
+ if(w==='real1'){ // muscle
+  s=rDefs('#3a3f4a','#5b6270')+'<rect x="106" y="198" width="58" height="32" rx="7" fill="#040404"/><rect x="436" y="198" width="58" height="32" rx="7" fill="#040404"/>'+
+  '<path d="M170,120 Q186,82 232,78 L368,78 Q414,82 430,120 Z" fill="#101218"/><path d="M188,116 Q200,90 236,86 L364,86 Q400,90 412,116 Z" fill="url(#rw)"/><path d="M214,112 L250,90 L272,90 L236,112Z" fill="#fff" opacity=".06"/>'+
+  '<path d="M92,202 L96,152 Q100,138 118,136 L482,136 Q500,138 504,152 L508,202 Q508,214 494,216 L106,216 Q92,214 92,202Z" fill="url(#rp)" stroke="#4a5060" stroke-width="1.2"/>'+
+  '<path d="M118,136 L150,119 L450,119 L482,136 Z" fill="#2a2e37" stroke="#4a5060"/><path d="M142,121 L458,121 L464,113 L136,113Z" fill="#0d0f13"/>'+
+  '<line x1="120" y1="138" x2="480" y2="138" stroke="#fff" stroke-width="1" opacity=".25"/>'+
+  '<rect x="110" y="145" width="154" height="32" rx="5" fill="#040507"/><rect x="336" y="145" width="154" height="32" rx="5" fill="#040507"/><rect x="264" y="149" width="72" height="24" rx="3" fill="#0b0c10"/>'+
+  lamp('M116,151 L184,151 L184,171 L116,171 Z')+lamp('M190,151 L258,151 L258,171 L190,171 Z')+lamp(mirX('M116,151 L184,151 L184,171 L116,171 Z'))+lamp(mirX('M190,151 L258,151 L258,171 L190,171 Z'))+
+  '<rect x="272" y="156" width="56" height="8" rx="2" fill="#e5e7eb" opacity=".12"/><rect x="262" y="181" width="76" height="20" rx="2" fill="#16181d" stroke="#30333b"/>'+
+  '<rect x="100" y="192" width="400" height="14" rx="6" fill="#0a0b0f"/>'+
+  [148,172,428,452].map(function(x){return '<ellipse cx="'+x+'" cy="211" rx="9" ry="6" fill="url(#rch)" stroke="#8a8f99" stroke-width="1"/>'}).join('')+glowRefl(300,170)}
+ if(w==='real2'){ // sedan sport, stopuri în L
+  s=rDefs('#17181c','#3a3c44')+'<rect x="116" y="200" width="52" height="30" rx="7" fill="#030303"/><rect x="432" y="200" width="52" height="30" rx="7" fill="#030303"/>'+
+  '<path d="M180,124 Q200,86 252,82 L348,82 Q400,86 420,124 Z" fill="#0d0e12"/><path d="M196,120 Q212,92 254,89 L346,89 Q388,92 404,120 Z" fill="url(#rw)"/>'+
+  '<path d="M100,206 C104,162 120,141 152,135 L448,135 C480,141 496,162 500,206 Q500,216 488,217 L112,217 Q100,216 100,206Z" fill="url(#rp)" stroke="#3b3e48" stroke-width="1.2"/>'+
+  '<path d="M152,135 C200,118 400,118 448,135 Z" fill="#1d1f25" stroke="#3b3e48"/><line x1="140" y1="137" x2="460" y2="137" stroke="#fff" stroke-width="1" opacity=".22"/>'+
+  lamp('M108,150 L200,145 L200,156 L126,160 L121,184 L108,186 Z')+lamp(mirX('M108,150 L200,145 L200,156 L126,160 L121,184 L108,186 Z'))+
+  '<g class="tl"><rect x="200" y="148" width="200" height="3" rx="1.5" fill="#ff1f2e" opacity=".6"/></g>'+
+  '<rect x="262" y="172" width="76" height="20" rx="2" fill="#14151a" stroke="#2c2e35"/><rect x="108" y="196" width="384" height="12" rx="6" fill="#08090c"/>'+
+  '<path d="M150,206 L196,206 L192,214 L154,214Z M404,206 L450,206 L446,214 L408,214Z" fill="url(#rch)" stroke="#8a8f99"/>'+glowRefl(300,160)}
+ if(w==='real3'){ // SUV argintiu
+  s=rDefs('#9aa1ad','#d7dbe2')+'<rect x="104" y="200" width="60" height="30" rx="7" fill="#040404"/><rect x="436" y="200" width="60" height="30" rx="7" fill="#040404"/>'+
+  '<path d="M96,214 L100,120 Q104,98 126,94 L474,94 Q496,98 500,120 L504,214 Z" fill="url(#rp)" stroke="#6b7280" stroke-width="1.2"/>'+
+  '<rect x="122" y="86" width="356" height="9" rx="4" fill="#1a1c22"/><path d="M136,104 L464,104 L454,142 L146,142 Z" fill="url(#rw)"/><path d="M170,138 L210,108 L236,108 L196,138Z" fill="#fff" opacity=".07"/>'+
+  lamp('M104,118 L132,118 Q136,118 136,124 L136,178 Q136,184 130,184 L104,184 Z')+lamp(mirX('M104,118 L132,118 Q136,118 136,124 L136,178 Q136,184 130,184 L104,184 Z'))+
+  '<g class="tl"><rect x="136" y="150" width="328" height="4" rx="2" fill="#ff1f2e"/></g><g class="tlg"><rect x="136" y="146" width="328" height="12" rx="6" fill="#ff1f2e" filter="url(#rg)" opacity=".7"/></g>'+
+  '<rect x="262" y="166" width="76" height="20" rx="2" fill="#2a2d33" stroke="#555a63"/><rect x="104" y="196" width="392" height="16" rx="6" fill="#1f2228"/><rect x="230" y="204" width="140" height="6" rx="3" fill="#0b0c0f"/>'+glowRefl(300,175)}
+ if(w==='real4'){ // GT coupé albastru închis
+  s=rDefs('#18233d','#3a4f7a')+'<rect x="104" y="202" width="62" height="28" rx="8" fill="#030303"/><rect x="434" y="202" width="62" height="28" rx="8" fill="#030303"/>'+
+  '<path d="M86,210 C92,170 128,150 170,146 C200,128 232,110 300,108 C368,110 400,128 430,146 C472,150 508,170 514,210 Q514,219 500,219 L100,219 Q86,219 86,210Z" fill="url(#rp)" stroke="#3d4f78" stroke-width="1.2"/>'+
+  '<path d="M232,130 Q262,116 300,115 Q338,116 368,130 L358,146 L242,146 Z" fill="url(#rw)"/><path d="M140,150 C220,140 380,140 460,150" stroke="#fff" stroke-width="1" opacity=".22" fill="none"/>'+
+  lamp('M98,170 Q140,157 206,159 L204,168 Q142,167 102,179 Z')+lamp(mirX('M98,170 Q140,157 206,159 L204,168 Q142,167 102,179 Z'))+
+  '<g class="tl"><path d="M110,184 Q150,176 200,177" stroke="#ff1f2e" stroke-width="2.5" fill="none"/><path d="'+mirX('M110,184 Q150,176 200,177')+'" stroke="#ff1f2e" stroke-width="2.5" fill="none"/></g>'+
+  '<rect x="262" y="170" width="76" height="18" rx="2" fill="#121726" stroke="#2c3550"/><path d="M196,198 L404,198 L392,216 L208,216Z" fill="#06070b"/>'+
+  [226,246,266,334,354,374].map(function(x){return '<rect x="'+x+'" y="200" width="3" height="15" fill="#1a1f2e"/>'}).join('')+
+  [282,302,318].map(function(x,i){return ''}).join('')+'<ellipse cx="286" cy="208" rx="8" ry="5" fill="url(#rch)" stroke="#8a8f99"/><ellipse cx="314" cy="208" rx="8" ry="5" fill="url(#rch)" stroke="#8a8f99"/>'+glowRefl(300,180)}
+ return svg(s)}
+
+// --- W31–W33: SUV electric modern cu bară LED pe toată lățimea (stil actual, fără siglă), scenă de noapte ---
+function evHTML(w){
+ var env={ev1:{fog:'#22324f',sky1:'#03050a',sky2:'#0a1020',bk:['#7dd3fc','#e2e8f0','#93c5fd'],rain:0},ev2:{fog:'#2a2f3a',sky1:'#040507',sky2:'#0d1016',bk:['#fbbf24','#f87171','#e5e7eb'],rain:1},ev3:{fog:'#3b1f55',sky1:'#06030b',sky2:'#150a24',bk:['#f472b6','#c084fc','#60a5fa'],rain:0}}[w]||{};
+ var s='<defs>'+
+ '<linearGradient id="es" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+env.sky1+'"/><stop offset="1" stop-color="'+env.sky2+'"/></linearGradient>'+
+ '<radialGradient id="ef" cx="50%" cy="58%" r="55%"><stop offset="0" stop-color="'+env.fog+'" stop-opacity=".95"/><stop offset="1" stop-color="'+env.fog+'" stop-opacity="0"/></radialGradient>'+
+ '<linearGradient id="eb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#20242f"/><stop offset=".5" stop-color="#0c0e13"/><stop offset="1" stop-color="#050608"/></linearGradient>'+
+ '<radialGradient id="ebh" cx="50%" cy="35%" r="60%"><stop offset="0" stop-color="#ffffff" stop-opacity=".08"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></radialGradient>'+
+ '<linearGradient id="eg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a3550"/><stop offset=".6" stop-color="#0b0f19"/><stop offset="1" stop-color="#05070c"/></linearGradient>'+
+ '<linearGradient id="erim" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9fb3d1" stop-opacity="0"/><stop offset=".25" stop-color="#c7d5ea" stop-opacity=".9"/><stop offset=".5" stop-color="#ffffff" stop-opacity="1"/><stop offset=".75" stop-color="#c7d5ea" stop-opacity=".9"/><stop offset="1" stop-color="#9fb3d1" stop-opacity="0"/></linearGradient>'+
+ '<linearGradient id="egr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a0b10"/><stop offset="1" stop-color="#020203"/></linearGradient>'+
+ '<linearGradient id="erf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff2a3a" stop-opacity=".7"/><stop offset="1" stop-color="#ff2a3a" stop-opacity="0"/></linearGradient>'+
+ '<filter id="eb1" x="-50%" y="-400%" width="200%" height="900%"><feGaussianBlur stdDeviation="2"/></filter>'+
+ '<filter id="eb2" x="-50%" y="-400%" width="200%" height="900%"><feGaussianBlur stdDeviation="7"/></filter>'+
+ '<filter id="eb3" x="-50%" y="-400%" width="200%" height="900%"><feGaussianBlur stdDeviation="20"/></filter>'+
+ '<filter id="eb4"><feGaussianBlur stdDeviation="9"/></filter>'+
+ '</defs>';
+ // cer, ceață, lumini de oraș departe
+ s+='<rect width="600" height="260" fill="url(#es)"/><g filter="url(#eb4)">';
+ for(var i=0;i<26;i++)s+='<circle cx="'+R(0,600).toFixed(0)+'" cy="'+R(60,175).toFixed(0)+'" r="'+R(3,9).toFixed(1)+'" fill="'+pick(env.bk)+'" opacity="'+R(.15,.45).toFixed(2)+'"/>';
+ s+='</g><ellipse cx="300" cy="150" rx="330" ry="120" fill="url(#ef)"/>';
+ // asfalt ud
+ s+='<rect y="214" width="600" height="46" fill="url(#egr)"/><rect y="214" width="600" height="1" fill="#2a3040" opacity=".6"/>';
+ var body='M112,214 C102,204 99,182 104,166 C110,150 128,142 158,138 C176,112 204,96 240,92 L360,92 C396,96 424,112 442,138 C472,142 490,150 496,166 C501,182 498,204 488,214 Z';
+ // reflexia mașinii în asfalt (răsturnată, ștearsă)
+ s+='<g opacity=".16" transform="translate(0,428) scale(1,-1)"><path d="'+body+'" fill="#4a5672"/></g>';
+ // roți (doar umbra lor)
+ s+='<rect x="114" y="194" width="58" height="26" rx="9" fill="#010102"/><rect x="428" y="194" width="58" height="26" rx="9" fill="#010102"/>';
+ s+='<ellipse cx="300" cy="216" rx="215" ry="6" fill="#000" opacity=".9"/>';
+ // caroseria
+ s+='<path d="'+body+'" fill="url(#eb)"/><path d="'+body+'" fill="url(#ebh)"/>';
+ // geamul din spate
+ s+='<path d="M194,134 C206,112 226,101 252,99 L348,99 C374,101 394,112 406,134 Z" fill="url(#eg)"/><path d="M214,130 C226,113 240,106 262,104 L292,104 L246,130 Z" fill="#cfe0ff" opacity=".05"/>';
+ // contur de lumină pe acoperiș și umeri
+ var rim='M168,130 C186,108 210,96 244,93 L356,93 C390,96 414,108 432,130';
+ s+='<path d="'+rim+'" stroke="url(#erim)" stroke-width="5" fill="none" filter="url(#eb2)" opacity=".5"/><path d="'+rim+'" stroke="url(#erim)" stroke-width="1.3" fill="none"/>';
+ s+='<path d="M106,166 C112,150 130,142 162,139" stroke="#8ea3c6" stroke-width="1.2" fill="none" opacity=".55"/><path d="M494,166 C488,150 470,142 438,139" stroke="#8ea3c6" stroke-width="1.2" fill="none" opacity=".55"/>';
+ s+='<path d="M150,140 C220,136 380,136 450,140" stroke="#ffffff" stroke-width=".8" fill="none" opacity=".12"/>';
+ // bara de jos, difuzor
+ s+='<path d="M118,196 C190,201 410,201 482,196 L486,208 C410,213 190,213 114,208 Z" fill="#06070a"/><path d="M220,206 L380,206" stroke="#1a1d25" stroke-width="2"/>';
+ // BARA LED (eroul): strălucire mare, strălucire mică, miez
+ var bar='M126,154 C200,149 400,149 474,154';
+ var hookL='M126,154 C118,155 113,159 111,166', hookR='M474,154 C482,155 487,159 489,166';
+ s+='<g class="tlg"><path d="'+bar+'" stroke="#ff1e32" stroke-width="22" fill="none" filter="url(#eb3)" opacity=".75"/></g>';
+ s+='<g class="tl"><path d="'+bar+'" stroke="#ff1e32" stroke-width="7" fill="none" filter="url(#eb2)"/>'+
+   '<path d="'+bar+'" stroke="#ff2a3a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="'+bar+'" stroke="#ffd6da" stroke-width="1" fill="none" stroke-linecap="round" opacity=".9"/>'+
+   '<path d="'+hookL+'" stroke="#ff2a3a" stroke-width="3.2" fill="none" stroke-linecap="round"/><path d="'+hookR+'" stroke="#ff2a3a" stroke-width="3.2" fill="none" stroke-linecap="round"/>'+
+   '<path d="M132,203 L150,204" stroke="#ff2a3a" stroke-width="2" stroke-linecap="round" opacity=".8"/><path d="M468,203 L450,204" stroke="#ff2a3a" stroke-width="2" stroke-linecap="round" opacity=".8"/></g>';
+ // lumina barei pe caroserie (reflex roșu sub ea)
+ s+='<g class="tlg"><path d="M140,162 C210,158 390,158 460,162" stroke="#ff1e32" stroke-width="10" fill="none" filter="url(#eb2)" opacity=".25"/></g>';
+ // reflexia barei în asfaltul ud: dâre verticale
+ s+='<g class="tlg">';
+ var streaks=env.rain?28:14;
+ for(i=0;i<streaks;i++){var x=128+i*(346/(streaks-1)),h=env.rain?R(26,44):R(14,26);s+='<rect x="'+(x-1.4).toFixed(1)+'" y="218" width="2.8" height="'+h.toFixed(0)+'" fill="url(#erf)" opacity="'+R(.35,.8).toFixed(2)+'" filter="url(#eb1)"/>'}
+ s+='<ellipse cx="300" cy="222" rx="190" ry="4" fill="#ff1e32" opacity=".45" filter="url(#eb2)"/></g>';
+ if(env.rain){for(i=0;i<90;i++){var rx=R(0,600),ry=R(0,214);s+='<line x1="'+rx.toFixed(0)+'" y1="'+ry.toFixed(0)+'" x2="'+(rx-4).toFixed(0)+'" y2="'+(ry+R(12,24)).toFixed(0)+'" stroke="#a9b8d6" stroke-width=".7" opacity="'+R(.12,.35).toFixed(2)+'"/>'}}
+ return svg(s)}
+
+// --- 📷 pozele trimise de tine: aceeași poză, peste ea doar stratul care stinge stopurile și cel care le face să strălucească ---
+function phHTML(w){var pos={ph1:'center 62%',ph2:'center 64%',ph3:'center 46%',ph4:'center 40%'}[w]||'center';
+ function L(f,c){return '<i class="phl'+(c?' '+c:'')+'" style="background-image:url('+f+');background-position:'+pos+'"></i>'}
+ return '<div class="phb">'+L(w+'.jpg')+L(w+'d.png','phd')+L(w+'g.png','phg')+'</div>'}
+function bgHTML(w){var s='',i;if(w.indexOf('ph')===0)return phHTML(w);if(w.indexOf('fut')===0)return futHTML(w);if(w.indexOf('real')===0)return realHTML(w);if(w.indexOf('ev')===0)return evHTML(w);
  switch(w){
- case 'car':return '<div class="carw"><img src="car.png" alt=""></div>';
+ case 'car':return '<div class="carw"><img src="car.png" alt=""><div class="glow soft"></div></div>';
  case 'tail':return '<div class="carw"><div class="glow2"></div><img src="car.png" alt=""><div class="glow"></div></div>';
  case 'city':return svg('<g fill="#0b1220">'+[[0,40,60],[45,30,90],[80,50,45],[135,35,110],[175,45,70],[225,30,130],[260,55,80],[320,35,100],[360,45,60],[410,30,120],[445,50,75],[500,35,95],[540,60,55]].map(function(b){var r='<rect x="'+b[0]+'" y="'+(260-b[2])+'" width="'+b[1]+'" height="'+b[2]+'"/>';for(var k=0;k<4;k++)r+='<rect x="'+(b[0]+5+k%2*12)+'" y="'+(268-b[2]+k*12)+'" width="5" height="5" fill="#fbbf24" opacity="'+R(.2,.8).toFixed(2)+'"/>';return r}).join('')+'</g>');
  case 'road':s='<defs><linearGradient id="sk2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1026"/><stop offset="1" stop-color="#3b1f5c"/></linearGradient><linearGradient id="rd2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14141d"/><stop offset="1" stop-color="#262634"/></linearGradient></defs><rect width="600" height="140" fill="url(#sk2)"/>'+starsS(40)+'<rect y="140" width="600" height="120" fill="#0a0a12"/><g fill="#111827">'+[[0,40,30],[45,30,50],[80,50,22],[470,40,40],[515,30,60],[550,50,28]].map(function(b){return '<rect x="'+b[0]+'" y="'+(140-b[2])+'" width="'+b[1]+'" height="'+b[2]+'"/>'}).join('')+'</g>';
@@ -485,7 +672,9 @@ function wallLayout(lay){if(lay===wlayKey)return;wlayKey=lay;wEls={};var g=$('wg
 function wSet(k,ic,b,sm){var e=wEls[k];if(!e)return;if(e.classList.contains('box')){var i=e.querySelector('.ic'),bb=e.querySelector('b'),ss=e.querySelector('small');if(i.textContent!==ic)i.textContent=ic;if(bb.textContent!==b)bb.textContent=b;if(ss.innerHTML!==sm)ss.innerHTML=sm}else if(e.textContent!==b)e.textContent=b}
 function drawWall(d,cf,t,hm,dt,ride){var w=cf.wall||'night';if(!(w in WALLS))w='night';wallAnim=cf.wa!==false;
  var wl=$('wall');wl.classList.toggle('noanim',!wallAnim);wl.classList.toggle('lt',w==='white');document.body.classList.toggle('wg',cf.wg!==false);
- if(w!==wallKey){wallKey=w;$('wbg').className='w-'+w;$('wbg').innerHTML=bgHTML(w);wcvKind=w;wcvP=[]}
+ if(w!==wallKey){wallKey=w;$('wbg').innerHTML=bgHTML(w);wcvKind=w;wcvP=[]}
+ var pi=cf.pi!=null?+cf.pi:70,pm=cf.pm||'lin',wb=$('wbg'),cn='w-'+w+' pm-'+pm+(pi<=0?' pi0':'');if(wb.className!==cn)wb.className=cn;
+ var pd=(+cf.ps||3.6)+'s',pv=String(Math.max(0,Math.min(100,pi))/100);if(wb.style.getPropertyValue('--pd')!==pd)wb.style.setProperty('--pd',pd);if(wb.style.getPropertyValue('--pi')!==pv)wb.style.setProperty('--pi',pv);
  if(fullMode==='wall')wcvStart();
  var lay=cf.wl!=null?cf.wl:(cf.wx===false?'brand.1.2,clk.5.3,dat.5.2':WDEF);wallLayout(lay);
  var x=d.x||{},hide=ride&&cf.wm!==false;
