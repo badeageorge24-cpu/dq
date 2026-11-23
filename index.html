@@ -82,6 +82,19 @@ body.rb #wgrid{padding-top:5.2vw}
 .wi.box .ic{font-size:1.5em}.wi.box b{font-weight:900}.wi.box small{display:block;font-size:.5em;opacity:.85;font-weight:bold;letter-spacing:.05em}.wi.box .tx{text-align:left;line-height:1.15}
 .wi.box.s1{font-size:min(2.4vw,5vh)}.wi.box.s2{font-size:min(3.6vw,7.4vh)}.wi.box.s3{font-size:min(5.4vw,11vh)}
 .wi.wx .d{font-size:.48em;font-weight:normal;opacity:.95;line-height:1.35}
+.wi .bars{display:flex;gap:.25em;align-items:flex-end;height:1.6em;margin:.15em 0}.wi .bars i{width:.45em;background:linear-gradient(#34d399,#059669);border-radius:.12em;min-height:.08em}.wi .bars i.now{background:linear-gradient(#fbbf24,#d97706)}
+.wi .pb{display:block;height:.28em;border-radius:.2em;background:rgba(148,163,184,.35);margin-top:.25em;overflow:hidden;min-width:7em}.wi .pb i{display:block;height:100%;background:linear-gradient(90deg,#f59e0b,#22c55e)}
+.wi.cdw{display:flex;gap:1.2em;align-items:center;border-radius:2vw;padding:.7vw 1.6vw}body.wg .wi.cdw{background:rgba(2,6,23,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.wi.cdw.s1{font-size:min(1.9vw,4vh)}.wi.cdw.s2{font-size:min(2.6vw,5.4vh)}.wi.cdw.s3{font-size:min(3.8vw,8vh)}
+.cdi{display:flex;align-items:center;gap:.45em;text-align:left}.cdr{width:2.4em;height:2.4em;border-radius:50%;display:flex;align-items:center;justify-content:center}.cdr span{width:1.9em;height:1.9em;border-radius:50%;background:#0f172a;display:flex;align-items:center;justify-content:center;font-size:.9em}
+.cdi b{font-size:1.35em;font-weight:900;display:block;line-height:1}.cdi small{font-size:.5em;opacity:.85;font-weight:bold;letter-spacing:.04em}.cdw .cdh{display:none}
+.cdw.done .cdi{display:none}.cdw.done .cdh{display:block;font-weight:900;color:#4ade80;font-size:1.2em}
+.cdw.hidem .cdi.m{display:none}
+.wi.clk.cs-neon{color:#a5f3fc;text-shadow:0 0 .08em #22d3ee,0 0 .25em #06b6d4,0 0 .5em #0891b2}.wi.clk.cs-retro{font-family:"Courier New",monospace;color:#fb923c;letter-spacing:.04em;text-shadow:0 0 .12em #f97316}.wi.clk.cs-thin{font-weight:200;letter-spacing:.02em}
+.wi.clk.cs-analog svg{width:1.6em;height:1.6em;display:block;filter:drop-shadow(0 .03em .1em rgba(0,0,0,.6))}
+.wi .mg{display:grid;grid-template-columns:repeat(10,.62em);gap:.12em;margin:.15em 0}.wi .mg i{width:.62em;height:.62em;border-radius:.12em;background:rgba(148,163,184,.25)}
+.wi .qrw{width:3.2em;height:3.2em;background:#fff;border-radius:.2em;padding:.12em;box-sizing:border-box;display:flex}.wi .qrw svg{width:100%;height:100%}
+.wi.rot b{white-space:normal;max-width:16em;display:block;transition:opacity .4s}
 #wall.lt{color:#0f172a}#wall.lt .wi{text-shadow:none}body.wg #wall.lt .wi.box{background:rgba(255,255,255,.6)}
 #wall.noanim *{animation:none!important}
 /* fundaluri vechi */
@@ -660,16 +673,21 @@ function wcvStart(){var cv=$('wcv');if(!WALLS[wcvKind]){cv.style.display='none';
  if(!wcvP.length||cv.width!==(cv.clientWidth||innerWidth))wcvInit(wcvKind);if(!wallAnim){try{wcvFrame(wcvKind)}catch(e){}return}if(!wcvRAF)wcvRAF=requestAnimationFrame(wcvLoop)}
 // --- elementele de peste wallpaper ---
 var WDEF='brand.1.2,clk.5.3,dat.5.2,wx.5.2',wlayKey='',wEls={};
-var WMONEY={a:1,ph:1,g:1,last:1};
+var WMONEY={a:1,ph:1,g:1,last:1,hrs:1,gb:1,vs:1,hab:1,best:1,plat:1,cash:1,kwh:1,wk:1,prof:1,tax:1,mon:1};
 function wItem(k,s){var e=document.createElement('div');e.className='wi '+k+' s'+s;
  if(k==='brand')e.innerHTML='<i>⚡</i>DRIVE IQ';
  else if(k==='clk'||k==='dat'||k==='msg'){}
- else{e.className+=' box';e.innerHTML='<span class="ic"></span><span class="tx"><b></b><small></small></span>';if(k==='wx')e.querySelector('small').className='d'}
+ else if(k==='cd'){e.className+=' cdw';e.innerHTML='<div class="cdi r"><div class="cdr"><span>🚗</span></div><div><b></b><small></small></div></div><div class="cdi m a"><div class="cdr"><span>💰</span></div><div><b></b><small></small></div></div><div class="cdi m p"><div class="cdr"><span>🎯</span></div><div><b></b><small></small></div></div><div class="cdh"></div>'}
+ else{e.className+=' box';e.innerHTML='<span class="ic"></span><span class="tx"><b></b><small></small></span>';if(k==='wx')e.querySelector('small').className='d';
+  if(k==='hrs'||k==='rain'){var b0=e.querySelector('b');b0.className='bars'}
+  if(k==='mon'){e.querySelector('b').className='mg'}
+  if(k==='wifi'){var ic0=e.querySelector('.ic');ic0.className='qrw'}
+  if(k==='gb'){var pb=document.createElement('span');pb.className='pb';pb.innerHTML='<i></i>';e.querySelector('.tx').appendChild(pb)}}
  if(WMONEY[k])e.classList.add('money');return e}
 function wallLayout(lay){if(lay===wlayKey)return;wlayKey=lay;wEls={};var g=$('wgrid');g.innerHTML='';var cells={};
  for(var p=1;p<=9;p++){var c=document.createElement('div');c.className='wc';c.dataset.r=Math.ceil(p/3);c.dataset.c=(p-1)%3+1;g.appendChild(c);cells[p]=c}
  (lay||'').split(',').forEach(function(it){var q=it.split('.');if(q.length<3)return;var k=q[0],p=+q[1]||5,s=+q[2]||2;if(!cells[p]||wEls[k])return;var e=wItem(k,s);cells[p].appendChild(e);wEls[k]=e})}
-function wSet(k,ic,b,sm){var e=wEls[k];if(!e)return;if(e.classList.contains('box')){var i=e.querySelector('.ic'),bb=e.querySelector('b'),ss=e.querySelector('small');if(i.textContent!==ic)i.textContent=ic;if(bb.textContent!==b)bb.textContent=b;if(ss.innerHTML!==sm)ss.innerHTML=sm}else if(e.textContent!==b)e.textContent=b}
+function wSet(k,ic,b,sm){var e=wEls[k];if(!e)return;if(e.classList.contains('box')){var i=e.querySelector('.ic'),bb=e.querySelector('b'),ss=e.querySelector('small');if(i&&i.textContent!==ic)i.textContent=ic;if(bb.textContent!==b)bb.textContent=b;if(ss.innerHTML!==sm)ss.innerHTML=sm}else if(e.textContent!==b)e.textContent=b}
 function drawWall(d,cf,t,hm,dt,ride){var w=cf.wall||'night';if(!(w in WALLS))w='night';wallAnim=cf.wa!==false;
  var wl=$('wall');wl.classList.toggle('noanim',!wallAnim);wl.classList.toggle('lt',w==='white');document.body.classList.toggle('wg',cf.wg!==false);
  if(w!==wallKey){wallKey=w;$('wbg').innerHTML=bgHTML(w);wcvKind=w;wcvP=[]}
@@ -678,13 +696,72 @@ function drawWall(d,cf,t,hm,dt,ride){var w=cf.wall||'night';if(!(w in WALLS))w='
  if(fullMode==='wall')wcvStart();
  var lay=cf.wl!=null?cf.wl:(cf.wx===false?'brand.1.2,clk.5.3,dat.5.2':WDEF);wallLayout(lay);
  var x=d.x||{},hide=ride&&cf.wm!==false;
- wSet('clk','',hm);wSet('dat','',dt);wSet('msg','',cf.wmsg||cf.msg||'');
+ clockSet(hm,cf.cs||'std');wSet('dat','',dt);wSet('msg','',cf.wmsg||cf.msg||'');
  for(var k in WMONEY)if(wEls[k])wEls[k].style.display=hide?'none':'';
  wSet('a','💰',t.a+' lei','AZI');wSet('n','🚗',String(t.n),t.n==1?'CURSĂ AZI':'CURSE AZI');wSet('ph','📈',t.ph+' lei/oră','RITM AZI');
  wSet('g','🎯',t.g<0?'–':t.g+'%',x.gv?'DIN '+x.gv+' LEI':'OBIECTIV');wSet('km','🛣',(t.km||'–')+' km','AZI, GPS');wSet('w','⏱',t.w||'–','LUCRATE AZI');
  if(t.last)wSet('last','🧾',t.last.p+' '+t.last.f,'ULTIMA · ACUM '+t.last.m+' MIN');else wSet('last','🧾','–','ULTIMA CURSĂ');
+ drawWall2(x,t,ride,cf);drawWall3(x,t,ride,cf);
  if(wEls.wx){if(wx&&wx.current){var c=wx.current,wc=WX[c.weather_code]||['🌡',''],txt=wc[1];try{txt+=' · '+Math.round(wx.daily.temperature_2m_min[0])+'° / '+Math.round(wx.daily.temperature_2m_max[0])+'°'}catch(e){}
   wSet('wx',wc[0],Math.round(c.temperature_2m)+'°',txt+'<br>'+rainTxt());wEls.wx.style.display=''}else wEls.wx.style.display='none'}}
+// --- elementele noi (⏬ counter, ore, față de ieri, apus, ora de obicei, record, platforme, cash, kWh, gol, săptămâna, telefon) ---
+function ringBg(pct,col){pct=Math.max(0,Math.min(100,pct));return 'conic-gradient('+col+' '+pct+'%,rgba(148,163,184,.3) 0)'}
+function cdSet(e,sel,v,sm,pct,col){var it=e.querySelector(sel);if(!it)return;var b=it.querySelector('b'),s=it.querySelector('small'),r=it.querySelector('.cdr');if(b.textContent!==v)b.textContent=v;if(s.textContent!==sm)s.textContent=sm;var bg=ringBg(pct,col);if(r.style.background!==bg)r.style.background=bg}
+function mm(m){m=Math.max(0,Math.round(m));return m>=60?Math.floor(m/60)+'h '+(m%60)+'m':m+' min'}
+function drawWall2(x,t,ride,cf){var e;
+ if((e=wEls.cd)&&x.cd){var c=x.cd,gn=c.gn||0,g=c.g||0,a=c.a||0,n=c.n||0,rl=Math.max(0,gn-n),ml=Math.max(0,g-a),pc=g>0?Math.min(100,Math.round(a/g*100)):0;
+  var done=(gn<=0||rl===0)&&(g<=0||ml===0)&&(gn>0||g>0);e.classList.toggle('done',done);e.classList.toggle('hidem',ride&&cf.wm!==false);
+  if(done){var h=e.querySelector('.cdh'),tx='🎉 Obiectiv atins!'+(g>0&&a>g?' +'+(a-g)+' lei peste':'');if(h.textContent!==tx)h.textContent=tx}
+  cdSet(e,'.r',gn>0?String(rl):'–',gn>0?(rl===1?'CURSĂ RĂMASĂ':'CURSE RĂMASE')+' · '+n+'/'+gn:'FĂRĂ OBIECTIV CURSE',gn>0?n/gn*100:0,'#60a5fa');
+  cdSet(e,'.a',g>0?ml+' lei':'–',g>0?'RĂMAȘI · '+a+'/'+g:'FĂRĂ OBIECTIV LEI',pc,'#fbbf24');
+  cdSet(e,'.p',g>0?(100-pc)+'%':'–','RĂMAS DIN OBIECTIV',pc,'#34d399')}
+ if((e=wEls.hrs)){var bb=e.querySelector('.bars'),hr=x.hr||[],mx=1;hr.forEach(function(q){mx=Math.max(mx,q[1])});
+  var key=JSON.stringify(hr);if(bb.dataset.k!==key){bb.dataset.k=key;bb.innerHTML=hr.map(function(q,i){return '<i'+(i===hr.length-1?' class="now"':'')+' style="height:'+Math.max(4,Math.round(q[1]/mx*100))+'%" title="'+q[0]+':00 · '+q[1]+' lei"></i>'}).join('')||'<i style="height:4%"></i>'}
+  var ic=e.querySelector('.ic');if(ic.textContent!=='📊')ic.textContent='📊';var sm=e.querySelector('small'),st=hr.length?'PE ORE AZI · '+hr[0][0]+':00–ACUM':'PE ORE AZI';if(sm.textContent!==st)sm.textContent=st}
+ if((e=wEls.gb)){var q=x.gb;wSet('gb','🎯',q?q.a+' lei':'–',q?(q.a>=q.g?'OBIECTIV ATINS · '+q.g+' LEI':'MAI AI '+(q.g-q.a)+' · DIN '+q.g):'SETEAZĂ OBIECTIVUL ÎN BANI');var pi=e.querySelector('.pb i'),w=q&&q.g?Math.min(100,Math.round(q.a/q.g*100))+'%':'0%';if(pi.style.width!==w)pi.style.width=w}
+ if(wEls.vs){var v=x.vs;wSet('vs','📅',v==null?'–':v==='nou'?'ieri: 0':(v>=0?'▲ +':'▼ ')+v+'%','FAȚĂ DE IERI, LA ORA ASTA');var vb=wEls.vs.querySelector('b');if(vb)vb.style.color=v==null||v==='nou'?'':v>=0?'#4ade80':'#f87171'}
+ if(wEls.sun){var ss='–',sl='RĂSĂRIT / APUS';try{var sr=new Date(wx.daily.sunrise[0]),sn=new Date(wx.daily.sunset[0]),now=new Date(),f=function(d){return ('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2)};
+   if(now<sr){ss='☀ în '+mm((sr-now)/60000);sl='RĂSĂRIT '+f(sr)+' · APUS '+f(sn)}else if(now<sn){ss='🌙 în '+mm((sn-now)/60000);sl='APUS '+f(sn)+' · RĂSĂRIT '+f(sr)}else{var sr2=wx.daily.sunrise[1]?new Date(wx.daily.sunrise[1]):null;ss=sr2?'☀ în '+mm((sr2-now)/60000):'noapte';sl='APUS '+f(sn)+(sr2?' · RĂSĂRIT '+f(sr2):'')}}catch(er){}
+  wSet('sun','🌅',ss,sl)}
+ if(wEls.hab){var hb=x.hab;wSet('hab','🔥',hb?hb.v+' lei/oră':'–',hb?'LA ORA ASTA, DE OBICEI · '+hb.n+' ZILE':'ÎNCĂ PUȚINE DATE')}
+ if(wEls.best)wSet('best','🏆',x.best?x.best+' lei/km':'–','CEA MAI BUNĂ OFERTĂ AZI');
+ if(wEls.plat){var pl=x.plat||[];wSet('plat','🛞',pl.length?pl.map(function(o){return o.p+' '+o.a}).join(' · '):'–',pl.length?pl.map(function(o){return o.n+' '+(o.p||'').toUpperCase()}).join(' · '):'PE PLATFORME AZI')}
+ if(wEls.cash){var ca=x.cash;wSet('cash','💵',ca?ca.a+' lei':'–',ca?'CASH AZI · '+ca.b+(ca.b===1?' BON':' BONURI'):'CASH AZI')}
+ if(wEls.kwh)wSet('kwh','⚡',x.lkwh?x.lkwh+' lei/kWh':'–','CÂȘTIGAT PE kWh');
+ if(wEls.idle){var id=x.idle;wSet('idle','⏳',id?mm(id.m):'–',id?'FĂRĂ CLIENT AZI'+(id.km>0.1?' · '+String(id.km).replace('.',',')+' KM GOL':''):'FĂRĂ CLIENT AZI')}
+ if(wEls.wk){var wk=x.wk;wSet('wk','🗓',wk?wk.a.toLocaleString('ro-RO')+' lei':'–',wk?(wk.g>0?Math.min(100,Math.round(wk.a/wk.g*100))+'% DIN '+wk.g.toLocaleString('ro-RO'):'SĂPTĂMÂNA ASTA'):'SĂPTĂMÂNA ASTA')}
+ if(wEls.tel){var tl=x.tel,ph=x.ph;wSet('tel','🌡',tl&&tl.t>0?tl.t+' °C':'–',(ph&&ph.b>=0?ph.b+'%'+(ph.c?' 🔌':''):'TELEFONUL')+(tl&&tl.hot?' · FIERBINTE':''));var tb=wEls.tel.querySelector('b');if(tb)tb.style.color=tl&&tl.hot?'#f87171':''}
+}
+// --- ceasul în stiluri + setul 2 de elemente ---
+function clockSet(hm,cs){var e=wEls.clk;if(!e)return;var cls='wi clk s'+(e.className.match(/s(\d)/)||[0,2])[1]+' cs-'+cs;if(e.className!==cls)e.className=cls;
+ if(cs==='analog'){var d=new Date(),k=d.getHours()+':'+d.getMinutes();if(e.dataset.k===k)return;e.dataset.k=k;var h=(d.getHours()%12+d.getMinutes()/60)*30,m=d.getMinutes()*6;
+  var tk='';for(var i=0;i<12;i++){var a=i*30*Math.PI/180;tk+='<line x1="'+(50+Math.sin(a)*40)+'" y1="'+(50-Math.cos(a)*40)+'" x2="'+(50+Math.sin(a)*45)+'" y2="'+(50-Math.cos(a)*45)+'" stroke="currentColor" stroke-width="'+(i%3?2:4)+'"/>'}
+  e.innerHTML='<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="rgba(2,6,23,.45)" stroke="currentColor" stroke-width="3"/>'+tk+'<line x1="50" y1="50" x2="'+(50+Math.sin(h*Math.PI/180)*25)+'" y2="'+(50-Math.cos(h*Math.PI/180)*25)+'" stroke="currentColor" stroke-width="6" stroke-linecap="round"/><line x1="50" y1="50" x2="'+(50+Math.sin(m*Math.PI/180)*37)+'" y2="'+(50-Math.cos(m*Math.PI/180)*37)+'" stroke="#f87171" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="4" fill="#f87171"/></svg>';return}
+ e.dataset.k='';if(e.firstChild&&e.firstChild.nodeType!==3)e.innerHTML='';if(e.textContent!==hm)e.textContent=hm}
+var ROT=['Drum bun! 🙂','Fiecare cursă contează 💪','Pauză scurtă, minte limpede ☕','Ochii pe drum, banii vin 🚗','Azi e o zi bună de câștig ✨','Bea apă și respiră adânc 💧'];
+function wifiEsc(v){return String(v||'').replace(/([\\;,:"])/g,'\\$1')}
+function drawWall3(x,t,ride,cf){var e,now=new Date();
+ if(wEls.eta){var a=+x.av||0,g=+x.gv||0,ph=parseFloat(String(t.ph||'').replace(',','.'))||0,v='–',sl='LA RITMUL DE ACUM';
+  if(g>0&&a>=g){v='🎉 atins';sl='OBIECTIV '+g+' LEI'}else if(g>0&&ph>0){var hrs=(g-a)/ph,d=new Date(Date.now()+hrs*3600e3);v=hrs>12?'peste 12 h':'pe la '+('0'+d.getHours()).slice(-2)+':'+('0'+d.getMinutes()).slice(-2);sl='OBIECTIV '+g+' LEI · MAI AI '+Math.round(g-a)}else if(!g)sl='SETEAZĂ OBIECTIVUL ÎN BANI';
+  wSet('eta','⏱',v,sl)}
+ if(wEls.zone){var z=x.zone;wSet('zone','🔥',z&&z.z&&z.z.length?z.z.join(' · '):'încă învăț',z&&z.n?'OFERTE BUNE LA ORA ASTA · '+z.n+' VĂZUTE':'ZONE BUNE ACUM')}
+ if((e=wEls.rain)){var bb=e.querySelector('.bars'),pr=[],st=-1,hh=now.getHours();try{var tt=wx.hourly.time,pp=wx.hourly.precipitation_probability,i0=0;for(var i=0;i<tt.length;i++){if(new Date(tt[i])<=now)i0=i}for(var j=i0;j<i0+6&&j<pp.length;j++){pr.push(pp[j]);if(st<0&&pp[j]>=40)st=j}}catch(er){}
+  var key=pr.join(',');if(bb.dataset.k!==key){bb.dataset.k=key;bb.innerHTML=pr.map(function(q){return '<i style="height:'+Math.max(4,q)+'%;background:linear-gradient(#93c5fd,#2563eb)"></i>'}).join('')}
+  var ic=e.querySelector('.ic');if(ic.textContent!=='🌧')ic.textContent='🌧';var sm=e.querySelector('small'),s2=!pr.length?'PLOAIE':st<0?'FĂRĂ PLOAIE ÎN 6 ORE':'PLOAIE PE LA '+((hh+(st-(function(){try{var tt=wx.hourly.time,i0=0;for(var i=0;i<tt.length;i++)if(new Date(tt[i])<=now)i0=i;return i0}catch(e){return 0}})()))%24)+':00';if(sm.textContent!==s2)sm.textContent=s2}
+ if(wEls.rot){var own=(cf.rmsg||'').split('\n').map(function(q){return q.trim()}).filter(Boolean),list=own.length?own:ROT.slice();
+  if(!own.length&&x.cd&&x.cd.gn>x.cd.n)list.push('Încă '+(x.cd.gn-x.cd.n)+' curse și ai făcut ziua! 🏁');var m=list[Math.floor(Date.now()/20000)%list.length];wSet('rot','💬',m,own.length?'MESAJ':'GÂNDUL ZILEI')}
+ if((e=wEls.wifi)){var ss=cf.wfs||'',q=e.querySelector('.qrw'),k2=ss+'|'+(cf.wfp||'');wSet('wifi','',ss||'–',ss?'WI-FI PENTRU PASAGER · SCANEAZĂ':'SCRIE REȚEAUA ÎN TELEFON');
+  if(q&&q.dataset.k!==k2){q.dataset.k=k2;q.innerHTML='';if(ss){var go=function(){try{var qq=qrcode(0,'M');qq.addData('WIFI:T:'+(cf.wfp?'WPA':'nopass')+';S:'+wifiEsc(ss)+';'+(cf.wfp?'P:'+wifiEsc(cf.wfp)+';':'')+';');qq.make();q.innerHTML=qq.createSvgTag({cellSize:4,margin:0,scalable:true})}catch(er){}};
+   if(window.qrcode)go();else{var sc=document.createElement('script');sc.src='https://unpkg.com/qrcode-generator@1.4.4/qrcode.js';sc.onload=go;document.head.appendChild(sc)}}}}
+ if(wEls.rem){var rm=(x.rem||[]).slice().sort(function(p,q){return p.d-q.d});wSet('rem','🔔',rm.length?rm.slice(0,2).map(function(o){return o.n+(o.d<0?' expirat!':o.d===0?' azi':' în '+o.d+(o.d===1?' zi':' zile'))}).join(' · '):'nimic urgent','REAMINTIRI');var rb=wEls.rem.querySelector('b');if(rb)rb.style.color=rm.length&&rm[0].d<=3?'#fbbf24':''}
+ if(wEls.strk){var sk=x.strk;wSet('strk','🏁',sk?'🔥 '+sk.n+(sk.n===1?' zi':' zile'):'–',sk?(sk.t?'LA RÂND · AZI ATINS':'LA RÂND · AZI ÎNCĂ NU'):'SETEAZĂ OBIECTIVUL ÎN BANI')}
+ if(wEls.prof){var pf=x.prof;wSet('prof','💸',pf?pf.a+' lei':'–',pf?'DUPĂ '+(pf.e||'energie').toUpperCase()+' · −'+pf.c+' LEI':'PROFIT DUPĂ ENERGIE')}
+ if(wEls.tax){var tx=x.tax;wSet('tax','🧮',tx?tx.a+' lei':'–',tx?'DE PUS DEOPARTE · '+tx.p+'% AZI':'TAXE')}
+ if(wEls.area)wSet('area','📍',x.area||'–','EȘTI ÎN');
+ if((e=wEls.mon)){var mo=x.mon,mg=e.querySelector('.mg');if(mo&&mg){var key3=JSON.stringify(mo);if(mg.dataset.k!==key3){mg.dataset.k=key3;var g3=mo.g||Math.max.apply(null,mo.d.concat([1])),h3='';
+   for(var d3=0;d3<mo.n;d3++){var v3=mo.d[d3],c3=v3==null?'rgba(148,163,184,.12)':v3<=0?'rgba(148,163,184,.3)':v3>=g3?'#16a34a':v3>=g3*.6?'#4ade80':'#eab308';h3+='<i style="background:'+c3+'" title="'+(d3+1)+': '+(v3==null?'':v3+' lei')+'"></i>'}mg.innerHTML=h3}}
+  var ic3=e.querySelector('.ic');if(ic3.textContent!=='📆')ic3.textContent='📆';var sm3=e.querySelector('small'),tot=mo?mo.d.reduce(function(p,q){return p+(q||0)},0):0,s3='LUNA ASTA'+(mo?' · '+tot.toLocaleString('ro-RO')+' LEI':'');if(sm3.textContent!==s3)sm3.textContent=s3}
+}
 // --- previzualizare în telefon (aceeași pagină, fără releu) ---
 var PREVIEW=/preview/.test(location.search+location.hash);
 window.diqPreview=function(js){try{cur=typeof js==='string'?JSON.parse(js):js;curRecv=Date.now();helloDone=true;draw()}catch(e){}};
