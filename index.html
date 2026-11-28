@@ -445,7 +445,7 @@ function drawX(d,cf,t,live,ride,o,age){var x=d.x||{},now=Date.now(),since=now-cu
  if(x.sl)fetchSlides(x.sl);drawSlides(x.sl&&x.sl.s)}
 loadSlides();applyLayout();
 // ===== Wallpaper 2: 27 fundaluri (unele animate) + elemente mutabile =====
-var WALLS={night:0,aurora:0,sunset:0,city:0,red:0,car:0,black:0,tail:0,road:0,rain:1,bokeh:1,trails:0,synth:0,warp:1,aurora2:0,ocean:0,snow:1,moon:0,pulse:0,mount:0,glass:0,carbon:0,map:0,gauge:0,forest:0,marble:0,white:0,fut1:0,fut2:0,fut3:0,fut4:0,fut5:0,fut6:0,real1:0,real2:0,real3:0,real4:0,ev1:0,ev2:0,ev3:0,ph1:0,ph2:0,ph3:0,ph4:0};
+var WALLS={night:0,aurora:0,sunset:0,city:0,red:0,car:0,black:0,tail:0,road:0,rain:1,bokeh:1,trails:0,synth:0,warp:1,aurora2:0,ocean:0,snow:1,moon:0,pulse:0,mount:0,glass:0,carbon:0,map:0,gauge:0,forest:0,marble:0,white:0,fut1:0,fut2:0,fut3:0,fut4:0,fut5:0,fut6:0,real1:0,real2:0,real3:0,real4:0,ev1:0,ev2:0,ev3:0,ph1:0,ph2:0,ph3:0,ph4:0,ph5:0,ph6:0,ph7:0,ph8:0,ph9:0};
 var wallKey='',wcvKind='',wcvRAF=0,wcvLast=0,wcvP=[],wallAnim=true;
 function R(a,b){return a+Math.random()*(b-a)}function pick(a){return a[Math.floor(Math.random()*a.length)]}
 function svg(inner,ar){return '<svg viewBox="0 0 600 260" preserveAspectRatio="'+(ar||'xMidYMid slice')+'">'+inner+'</svg>'}
@@ -604,7 +604,7 @@ function evHTML(w){
  return svg(s)}
 
 // --- 📷 pozele trimise de tine: aceeași poză, peste ea doar stratul care stinge stopurile și cel care le face să strălucească ---
-function phHTML(w){var pos={ph1:'center 62%',ph2:'center 64%',ph3:'center 46%',ph4:'center 40%'}[w]||'center';
+function phHTML(w){var pos={ph1:'center 62%',ph2:'center 64%',ph3:'center 46%',ph4:'center 40%',ph5:'center 60%',ph6:'center 62%',ph7:'center 58%',ph8:'center 60%',ph9:'center 55%'}[w]||'center';
  function L(f,c){return '<i class="phl'+(c?' '+c:'')+'" style="background-image:url('+f+');background-position:'+pos+'"></i>'}
  return '<div class="phb">'+L(w+'.jpg')+L(w+'d.png','phd')+L(w+'g.png','phg')+'</div>'}
 function bgHTML(w){var s='',i;if(w.indexOf('ph')===0)return phHTML(w);if(w.indexOf('fut')===0)return futHTML(w);if(w.indexOf('real')===0)return realHTML(w);if(w.indexOf('ev')===0)return evHTML(w);
